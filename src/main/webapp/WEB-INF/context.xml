@@ -72,17 +72,17 @@
     <!--task:executor id="executor" pool-size="2" keep-alive="2" queue-capacity="1000" /-->
     <task:scheduler id="taskScheduler" pool-size="5" />
 
-    <context:component-scan base-package="fund.cyber.chainparser.core.dao"/>
-    <context:component-scan base-package="fund.cyber.chainparser.core.service"/>
+    <context:component-scan base-package="fund.cyber.node.core.dao"/>
+    <context:component-scan base-package="fund.cyber.node.core.service"/>
 
-    <bean class="fund.cyber.chainparser.core.chain.DatabaseBlockStore" id="blockStore"/>
+    <bean class="fund.cyber.node.core.chain.DatabaseBlockStore" id="blockStore"/>
     <bean class="org.bitcoinj.params.MainNetParams" name="netParams"/>
     <bean class="org.bitcoinj.core.BlockChain" id="blockChain">
         <constructor-arg name="params" ref="netParams"/>
         <constructor-arg name="blockStore" ref="blockStore"/>
     </bean>
 
-    <context:component-scan base-package="fund.cyber.chainparser.core.chain"/>
-    <context:component-scan base-package="fund.cyber.chainparser.web.controller"/>
+    <context:component-scan base-package="fund.cyber.node.core.chain"/>
+    <context:component-scan base-package="fund.cyber.node.web.controller"/>
 
 </beans>

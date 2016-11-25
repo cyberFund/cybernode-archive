@@ -63,7 +63,7 @@
     <task:annotation-driven executor="executor"/>
     <task:executor id="executor" pool-size="5" keep-alive="15" queue-capacity="1000" />
 
-    <context:component-scan base-package="fund.cyber.chainparser.core.dao"/>
-    <context:component-scan base-package="fund.cyber.chainparser.core.service"/>
+    <context:component-scan base-package="fund.cyber.node.core.dao"/>
+    <context:component-scan base-package="fund.cyber.node.core.service"/>
 
 </beans>

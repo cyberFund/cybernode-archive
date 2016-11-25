@@ -14,6 +14,6 @@
                 http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
                 http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
-    <context:component-scan base-package="fund.cyber.chainparser.web.controller"/>
+    <context:component-scan base-package="fund.cyber.node.web.controller"/>
 
 </beans>

@@ -128,6 +128,12 @@
             <version>3.1.0</version>
         </dependency>
 
+        <!-- rethinkdb-driver -->
+        <dependency>
+            <groupId>com.rethinkdb</groupId>
+            <artifactId>rethinkdb-driver</artifactId>
+            <version>2.3.3</version>
+        </dependency>
         <!-- bitcoinj-core -->
         <dependency>
             <groupId>org.bitcoinj</groupId>
