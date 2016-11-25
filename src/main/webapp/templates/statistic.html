@@ -1,0 +1,14 @@
+<div>
+    <div class="row">
+        <div class="col-xs-6">Headers: <b><span ng-bind="stat.headers"/></b></div>
+        <div class="col-xs-6">Blocks indexed: <b><span ng-bind="stat.blocks"/></b></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">Last indexed block: <a ng-href="{{prefix.block+stat.lastIndexedBlock}}"><span ng-bind="stat.lastIndexedBlock"/></a></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">Headers fetching in progress: <b><span ng-bind="stat.blockFetching"/></b></div>
+        <div class="col-xs-6">Transactions fetching in progress: <b><span ng-bind="stat.transactionFetching"/></b></div>
+    </div>
+</div>
+

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence">
+
+    <persistence-unit name="chainparser" transaction-type="RESOURCE_LOCAL">
+
+        <properties>
+            <property name="eclipselink.ddl-generation" value="none"/>
+            <property name="eclipselink.ddl-generation.output-mode" value="database"/>
+            <property name="eclipselink.logging.level" value="SEVERE"/>
+            <property name="eclipselink.persistence-context.reference-mode" value="hard"/>
+            <!--property name="eclipselink.logging.level" value="FINEST"/-->
+            <!--property name="eclipselink.weaving" value="true"/-->
+            <!--property name="eclipselink.jdbc.batch-writing" value="JDBC" /-->
+            <!--property name="eclipselink.weaving.lazy" value="true"/-->
+        </properties>
+
+    </persistence-unit>
+
+</persistence>

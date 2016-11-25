@@ -1,0 +1,22 @@
+<div>
+    <div class="row">
+        <div class="col-xs-6">Address: <span ng-bind="address.hash"/></div>
+        <div class="col-xs-6">Balance: <span ng-bind="address.balance | btc"/></div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-xs-12">Transactions:</div>
+    </div>
+    <div class="row underline" ng-repeat="tx in address.transactions">
+        <div class="col-xs-2"><span ng-bind="tx.effect | btc : [true]" ng-class="{'green': tx.effect > 0, 'red': tx.effect < 0}"/></div>
+        <div class="col-xs-10"><a ng-href="{{prefix.tx+tx.hash}}"><span ng-bind="tx.hash"/></a></div>
+        <div class="col-xs-5">
+            <div ng-repeat="input in tx.inputs"><a ng-href="{{prefix.address+input.address}}"><span ng-bind="input.address"/></a></div>
+        </div>
+        <div class="col-xs-2"><span class="glyphicon glyphicon-arrow-right" ng-class="{'green': tx.effect > 0, 'red': tx.effect < 0}"/></div>
+        <div class="col-xs-5">
+            <div ng-repeat="output in tx.outputs"><a ng-href="{{prefix.address+output.address}}"><span ng-bind="output.address"/></a></div>
+        </div>
+    </div>
+</div>
+

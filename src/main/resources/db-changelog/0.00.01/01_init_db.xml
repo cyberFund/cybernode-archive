@@ -1,0 +1,138 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="alobarev" id="20161021-1-init-db">
+
+        <createTable tableName="block">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="block_pkey"/>
+            </column>
+            <column name="hash" type="CHAR(64)"/>
+            <column name="version" type="BIGINT"/>
+            <column name="prev_block_id" type="BIGINT"/>
+            <column name="merkle_root" type="CHAR(64)"/>
+            <column name="time" type="BIGINT"/>
+            <column name="difficulty" type="BIGINT"/>
+            <column name="nonce" type="BIGINT"/>
+            <column name="height" type="INT"/>
+            <column name="chainwork" type="DECIMAL(40,0)"/>
+            <column name="chainhead" type="BOOL" value="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="transaction">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="transaction_pkey"/>
+            </column>
+            <column name="hash" type="CHAR(64)"/>
+            <column name="version" type="BIGINT"/>
+            <column name="lock" type="BIGINT"/>
+            <column name="block_id" type="BIGINT"/>
+            <column name="position" type="BIGINT"/>
+        </createTable>
+
+        <createTable tableName="input">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="input_pkey"/>
+            </column>
+            <column name="transaction_id" type="BIGINT"/>
+            <column name="position" type="BIGINT"/>
+            <column name="output_id" type="BIGINT"/>
+            <column name="script_bytes" type="TEXT"/>
+            <column name="script" type="TEXT"/>
+            <column name="sequence" type="BIGINT"/>
+        </createTable>
+
+        <createTable tableName="output">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="output_pkey"/>
+            </column>
+            <column name="transaction_id" type="BIGINT"/>
+            <column name="position" type="BIGINT"/>
+            <column name="value" type="BIGINT"/>
+            <column name="script_bytes" type="TEXT"/>
+            <column name="script" type="TEXT"/>
+            <column name="script_type" type="char(7)"/>
+            <column name="address_id" type="BIGINT"/>
+        </createTable>
+
+        <createTable tableName="address">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="address_pkey"/>
+            </column>
+            <column name="hash" type="char(34)"/>
+        </createTable>
+
+        <createTable tableName="file">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="file_pkey"/>
+            </column>
+            <column name="height" type="INT"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="block" baseColumnNames="prev_block_id" constraintName="block_prev_block_id_fkey" referencedTableName="block" referencedColumnNames="id" />
+        <addForeignKeyConstraint baseTableName="transaction" baseColumnNames="block_id" constraintName="transaction_block_id_fkey" referencedTableName="block" referencedColumnNames="id" />
+        <addForeignKeyConstraint baseTableName="input" baseColumnNames="transaction_id" constraintName="input_transaction_id_fkey" referencedTableName="transaction" referencedColumnNames="id" />
+        <addForeignKeyConstraint baseTableName="input" baseColumnNames="output_id" constraintName="input_output_id_fkey" referencedTableName="output" referencedColumnNames="id" />
+        <addForeignKeyConstraint baseTableName="output" baseColumnNames="transaction_id" constraintName="output_transaction_id_fkey" referencedTableName="transaction" referencedColumnNames="id" />
+        <addForeignKeyConstraint baseTableName="output" baseColumnNames="address_id" constraintName="output_address_id_fkey" referencedTableName="address" referencedColumnNames="id" />
+
+        <createIndex indexName="block_prev_block" tableName="block">
+            <column name="prev_block_id"/>
+        </createIndex>
+
+        <createIndex indexName="block_hash" tableName="block">
+            <column name="hash"/>
+        </createIndex>
+
+        <createIndex indexName="block_height" tableName="block">
+            <column name="height"/>
+        </createIndex>
+
+        <createIndex indexName="block_chainwork" tableName="block">
+            <column name="chainwork"/>
+        </createIndex>
+
+        <createIndex indexName="transaction_block" tableName="transaction">
+            <column name="block_id"/>
+        </createIndex>
+
+        <createIndex indexName="transaction_block_position" tableName="transaction">
+            <column name="block_id"/>
+            <column name="position"/>
+        </createIndex>
+
+        <createIndex indexName="input_transaction" tableName="input">
+            <column name="transaction_id"/>
+        </createIndex>
+
+        <createIndex indexName="input_transaction_position" tableName="input">
+            <column name="transaction_id"/>
+            <column name="position"/>
+        </createIndex>
+
+        <createIndex indexName="input_output" tableName="input">
+            <column name="output_id"/>
+        </createIndex>
+
+        <createIndex indexName="output_transaction" tableName="output">
+            <column name="transaction_id"/>
+        </createIndex>
+
+        <createIndex indexName="output_transaction_position" tableName="output">
+            <column name="transaction_id"/>
+            <column name="position"/>
+        </createIndex>
+
+        <createIndex indexName="address_hash" tableName="address">
+            <column name="hash"/>
+        </createIndex>
+
+        <createIndex indexName="transaction_hash" tableName="transaction">
+            <column name="hash"/>
+        </createIndex>
+
+    </changeSet>
+
+</databaseChangeLog>

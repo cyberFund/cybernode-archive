@@ -1,0 +1,29 @@
+<div>
+    <div class="row">
+        <div class="col-xs-12">Block: <span ng-bind="block.hash"/></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">Height: <span ng-bind="block.height"/></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">Previous block: <a ng-href="{{prefix.block+block.prevBlock}}"><span ng-bind="block.prevBlock"/></a></div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-xs-12">Transactions:</div>
+    </div>
+    <div class="row underline" ng-repeat="tx in block.transactions">
+        <div class="col-xs-12"><a ng-href="{{prefix.tx+tx.hash}}"><span ng-bind="tx.hash"/></a></div>
+        <div class="col-xs-5">
+            <div ng-repeat="input in tx.inputs"><a ng-href="{{prefix.address+input.address}}"><span ng-bind="input.address"/></a></div>
+        </div>
+        <div class="col-xs-1"><span class="glyphicon glyphicon-arrow-right"/></div>
+        <div class="col-xs-5">
+            <div ng-repeat="output in tx.outputs"><a ng-href="{{prefix.address+output.address}}"><span ng-bind="output.address"/></a></div>
+        </div>
+        <div class="col-xs-1">
+            <div ng-repeat="output in tx.outputs"><span ng-bind="output.value | btc"/></div>
+        </div>
+    </div>
+</div>
+
