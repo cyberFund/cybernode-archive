@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.InetAddress;
 
-@Service
+//@Service
 public class DataFetcher implements InitializingBean {
 
     @Autowired

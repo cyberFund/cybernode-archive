@@ -3,8 +3,10 @@ package fund.cyber.node.web.controller;
 
 import fund.cyber.node.core.chain.DataFetcher;
 import fund.cyber.node.core.service.AddressService;
+import fund.cyber.node.core.service.BitcoreService;
 import fund.cyber.node.core.service.BlockService;
 import fund.cyber.node.core.service.TransactionService;
+import fund.cyber.node.model.bitcore.Block;
 import fund.cyber.node.model.dto.AddressDto;
 import fund.cyber.node.model.dto.BlockDto;
 import fund.cyber.node.model.dto.StatusDto;
@@ -31,6 +33,10 @@ public class MainController {
     @Autowired
     private TransactionService transactionService;
 
+    @Autowired
+    private BitcoreService bitcoreService;
+
+/*
     @Autowired
     private DataFetcher dataFetcher;
 
@@ -64,11 +70,14 @@ public class MainController {
     public void stopTransactionFetch() throws IOException {
         dataFetcher.stopTransactionFetch();
     }
+*/
+
 
     @RequestMapping(value = "/block/{hash}", method = RequestMethod.GET)
     @ResponseBody
-    public BlockDto getBlock(@PathVariable("hash") final String hash) throws IOException {
-        return blockService.get(hash);
+    public Block getBlock(@PathVariable("hash") final String hash) throws IOException {
+        return bitcoreService.getBlock(hash);
+        //return blockService.get(hash);
     }
 
     @RequestMapping(value = "/tx/{hash}", method = RequestMethod.GET)

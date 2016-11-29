@@ -37,7 +37,7 @@ public class DBMigrator implements InitializingBean {
                 throw new RuntimeException("Migration fail");
             } else if (log == null) {
                 migration.run();
-                r.db(DB).table(MIGRATION_TABLE).insert(new MigrationLog(migration.getId(), hash)).run(connection);
+                r.db(DB).table(MIGRATION_TABLE).insert(new MigrationLog((long) migration.getId(), (long) hash)).run(connection);
             }
         }
         connection.close();

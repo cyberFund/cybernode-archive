@@ -31,7 +31,7 @@ import static java.lang.Math.toIntExact;
 import static org.bitcoinj.core.Utils.readUint32;
 import static org.bitcoinj.core.Utils.uint32ToByteArrayBE;
 
-@Service
+//@Service
 public class FileParser {
 
     @Value("${bitcoin.data.dir}")

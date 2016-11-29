@@ -1,30 +1,30 @@
 package fund.cyber.node.model;
 
 public class MigrationLog {
-    private long id;
-    private long hash;
+    private Long id;
+    private Long hash;
 
     public MigrationLog() {
     }
 
-    public MigrationLog(long id, long hash) {
+    public MigrationLog(Long id, Long hash) {
         this.id = id;
         this.hash = hash;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public long getHash() {
+    public Long getHash() {
         return hash;
     }
 
-    public void setHash(long hash) {
+    public void setHash(Long hash) {
         this.hash = hash;
     }
 }
