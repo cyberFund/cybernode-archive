@@ -83,6 +83,7 @@
     </bean>
 
     <context:component-scan base-package="fund.cyber.node.core.chain"/>
+    <context:component-scan base-package="fund.cyber.node.core.data"/>
     <context:component-scan base-package="fund.cyber.node.web.controller"/>
 
 </beans>

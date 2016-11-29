@@ -64,5 +64,6 @@ public class InitDbMigration extends Migration {
         r.db(DB).table(INPUT_TABLE).indexCreate(TX_AND_POSITION_INDEX, row -> r.array(row.g(TX_ID_FIELD), row.g(POSITION_FIELD))).run(connection);
         r.db(DB).table(INPUT_TABLE).indexCreate(OUTPUT_ID_FIELD).run(connection);
 
+        connection.close();
     }
 }

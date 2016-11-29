@@ -28,31 +28,34 @@ public class DBMigrator implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         migrations.sort(null);
-        for (Migration migration: migrations) {
-            Method runMethod = Migration.class.getMethod("run");
-            int hash = runMethod.hashCode();
-            MigrationLog log = getMigrationLog(migration);
+        final Connection connection = connectionFactory.createConnection();
+        for (final Migration migration : migrations) {
+            final Method runMethod = Migration.class.getMethod("run");
+            final int hash = runMethod.hashCode();
+            final MigrationLog log = getMigrationLog(migration);
             if (log != null && log.getHash() != hash) {
                 throw new RuntimeException("Migration fail");
             } else if (log == null) {
                 migration.run();
-                final Connection connection = connectionFactory.createConnection();
                 r.db(DB).table(MIGRATION_TABLE).insert(new MigrationLog(migration.getId(), hash)).run(connection);
             }
         }
+        connection.close();
     }
 
     private MigrationLog getMigrationLog(final Migration migration) {
-            final Connection connection = connectionFactory.createConnection();
-            final List<String> dbList = r.dbList().run(connection);
-            if (!dbList.contains(DB)) {
-                return null;
-            }
-            final List<String> tables = r.db(DB).tableList().run(connection);
-            if (!tables.contains(MIGRATION_TABLE)) {
-                return null;
-            }
-            return r.db(DB).table(MIGRATION_TABLE).get(migration.getId()).run(connection, MigrationLog.class);
+        final Connection connection = connectionFactory.createConnection();
+        final List<String> dbList = r.dbList().run(connection);
+        if (!dbList.contains(DB)) {
+            return null;
         }
+        final List<String> tables = r.db(DB).tableList().run(connection);
+        if (!tables.contains(MIGRATION_TABLE)) {
+            return null;
+        }
+        final MigrationLog log = r.db(DB).table(MIGRATION_TABLE).get(migration.getId()).run(connection, MigrationLog.class);
+        connection.close();
+        return log;
+    }
 
 }

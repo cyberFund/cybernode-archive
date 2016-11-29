@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class RethinkDBConnectionFactory {
 
-    @Value(value = "${rethinkdb.host}")
-    private final String host;
+    @Value("${rethinkdb.host}")
+    private String host;
 
-    public RethinkDBConnectionFactory(final String host) {
-        this.host = host;
+    public RethinkDBConnectionFactory() {
+
     }
 
     public Connection createConnection() {
