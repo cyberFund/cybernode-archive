@@ -8,8 +8,6 @@ import fund.cyber.node.core.service.BlockService;
 import fund.cyber.node.core.service.TransactionService;
 import fund.cyber.node.model.bitcore.Block;
 import fund.cyber.node.model.dto.AddressDto;
-import fund.cyber.node.model.dto.BlockDto;
-import fund.cyber.node.model.dto.StatusDto;
 import fund.cyber.node.model.dto.TransactionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,15 +34,9 @@ public class MainController {
     @Autowired
     private BitcoreService bitcoreService;
 
-/*
     @Autowired
     private DataFetcher dataFetcher;
 
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
-    public StatusDto getStatus() {
-        return dataFetcher.getStatus();
-    }
 
 
     @RequestMapping(value = "fetch/blocks/start", method = RequestMethod.GET)
@@ -58,6 +50,14 @@ public class MainController {
     public void stopBlocksFetch() {
         dataFetcher.stopBlocksFetch();
     }
+
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public Block getStatus() {
+        return dataFetcher.getStatus();
+    }
+
+/*
 
     @RequestMapping(value = "fetch/transactions/start", method = RequestMethod.GET)
     @ResponseBody

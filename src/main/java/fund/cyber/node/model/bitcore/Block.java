@@ -8,20 +8,20 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Block {
 	private String hash;
-    private long size;
-    private long height;
-    private int version;
+    private Long size;
+    private Long height;
+    private Long version;
     private String merkleroot;
     private List<String> tx;
-    private long time;
+    private Long time;
     private BigInteger nonce;
     private String bits;
-    private double difficulty;
+    private Double difficulty;
     private String chainwork;
-    private long confirmations;
+    private Long confirmations;
     private String previousblockhash;
     private String nextblockhash;
-    private float reward;
+    private Double reward;
 
     public String getHash() {
         return hash;
@@ -31,27 +31,27 @@ public class Block {
         this.hash = hash;
     }
 
-    public long getSize() {
+    public Long getSize() {
         return size;
     }
 
-    public void setSize(long size) {
+    public void setSize(Long size) {
         this.size = size;
     }
 
-    public long getHeight() {
+    public Long getHeight() {
         return height;
     }
 
-    public void setHeight(long height) {
+    public void setHeight(Long height) {
         this.height = height;
     }
 
-    public int getVersion() {
+    public Long getVersion() {
         return version;
     }
 
-    public void setVersion(int version) {
+    public void setVersion(Long version) {
         this.version = version;
     }
 
@@ -71,11 +71,11 @@ public class Block {
         this.tx = tx;
     }
 
-    public long getTime() {
+    public Long getTime() {
         return time;
     }
 
-    public void setTime(long time) {
+    public void setTime(Long time) {
         this.time = time;
     }
 
@@ -95,11 +95,11 @@ public class Block {
         this.bits = bits;
     }
 
-    public double getDifficulty() {
+    public Double getDifficulty() {
         return difficulty;
     }
 
-    public void setDifficulty(double difficulty) {
+    public void setDifficulty(Double difficulty) {
         this.difficulty = difficulty;
     }
 
@@ -111,11 +111,11 @@ public class Block {
         this.chainwork = chainwork;
     }
 
-    public long getConfirmations() {
+    public Long getConfirmations() {
         return confirmations;
     }
 
-    public void setConfirmations(long confirmations) {
+    public void setConfirmations(Long confirmations) {
         this.confirmations = confirmations;
     }
 
@@ -135,11 +135,11 @@ public class Block {
         this.nextblockhash = nextblockhash;
     }
 
-    public float getReward() {
+    public Double getReward() {
         return reward;
     }
 
-    public void setReward(float reward) {
+    public void setReward(Double reward) {
         this.reward = reward;
     }
 }

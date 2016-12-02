@@ -73,6 +73,7 @@
     <task:scheduler id="taskScheduler" pool-size="5" />
 
     <context:component-scan base-package="fund.cyber.node.core.dao"/>
+    <context:component-scan base-package="fund.cyber.node.core.data"/>
     <context:component-scan base-package="fund.cyber.node.core.service"/>
 
     <bean class="fund.cyber.node.core.chain.DatabaseBlockStore" id="blockStore"/>
@@ -83,7 +84,6 @@
     </bean>
 
     <context:component-scan base-package="fund.cyber.node.core.chain"/>
-    <context:component-scan base-package="fund.cyber.node.core.data"/>
     <context:component-scan base-package="fund.cyber.node.web.controller"/>
 
 </beans>

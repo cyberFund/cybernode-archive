@@ -42,7 +42,6 @@ public class InitDbMigration extends Migration {
     @Override
     public void run() {
         final Connection connection = connectionFactory.createConnection();
-        final List<String> dbList = r.dbList().run(connection);
 
         r.dbCreate(DB).run(connection);
 
