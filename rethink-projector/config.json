@@ -1,0 +1,12 @@
+{
+  "rpc" : {
+    "host": "localhost",
+    "port":8090
+  },
+  "rethinkdb": {
+    "host": "localhost",
+    "port": 28015,
+    "authKey": "",
+    "db": "steem"
+  }
+}
