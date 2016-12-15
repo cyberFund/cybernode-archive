@@ -2,10 +2,7 @@ package fund.cyber.node.web.controller;
 
 
 import fund.cyber.node.core.chain.DataFetcher;
-import fund.cyber.node.core.service.AddressService;
 import fund.cyber.node.core.service.BitcoreService;
-import fund.cyber.node.core.service.BlockService;
-import fund.cyber.node.core.service.TransactionService;
 import fund.cyber.node.model.bitcore.Block;
 import fund.cyber.node.model.dto.AddressDto;
 import fund.cyber.node.model.dto.TransactionDto;
@@ -21,15 +18,6 @@ import java.io.IOException;
 @Controller
 @RequestMapping(value = "/")
 public class MainController {
-
-    @Autowired
-    private BlockService blockService;
-
-    @Autowired
-    private AddressService addressService;
-
-    @Autowired
-    private TransactionService transactionService;
 
     @Autowired
     private BitcoreService bitcoreService;
@@ -77,20 +65,8 @@ public class MainController {
     @ResponseBody
     public Block getBlock(@PathVariable("hash") final String hash) throws IOException {
         return bitcoreService.getBlock(hash);
-        //return blockService.get(hash);
     }
 
-    @RequestMapping(value = "/tx/{hash}", method = RequestMethod.GET)
-    @ResponseBody
-    public TransactionDto getTransaction(@PathVariable("hash") final String hash) throws IOException {
-        return transactionService.getTransaction(hash);
-    }
-
-    @RequestMapping(value = "/address/{hash}", method = RequestMethod.GET)
-    @ResponseBody
-    public AddressDto getAddress(@PathVariable("hash") final String hash) throws IOException {
-        return addressService.getAddress(hash);
-    }
 
 }
 

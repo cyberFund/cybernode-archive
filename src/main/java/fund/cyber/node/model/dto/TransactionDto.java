@@ -1,15 +1,8 @@
 package fund.cyber.node.model.dto;
 
-import org.bitcoinj.core.Sha256Hash;
-import org.bitcoinj.core.Transaction;
-
 import java.util.List;
 
 public class TransactionDto {
-
-    //FIXME remove code duplication
-    private static final String BLOCK_STRING_PREFIX = "/api/block/";
-    private static final String TX_STRING_PREFIX = "/api/tx/";
 
     private long version;
     private List<TransactionInputDto> inputs;
@@ -22,16 +15,6 @@ public class TransactionDto {
     private long outputSum;
 
     public TransactionDto() {
-    }
-
-    public TransactionDto(Transaction tx, Sha256Hash block) {
-        this.version = tx.getVersion();
-        this.lockTime = tx.getLockTime();
-        this.hash = TX_STRING_PREFIX + tx.getHash().toString();
-        this.inputSum = tx.getInputSum().getValue();
-        this.fee =tx.getFee().getValue();
-        this.block = BLOCK_STRING_PREFIX + block.toString();
-
     }
 
     public long getVersion() {

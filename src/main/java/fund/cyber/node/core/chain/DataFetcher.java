@@ -1,7 +1,7 @@
 package fund.cyber.node.core.chain;
 
 import fund.cyber.node.core.service.BitcoreService;
-import fund.cyber.node.core.service.rethinkdb.BlockDbService;
+import fund.cyber.node.core.service.BlockDbService;
 import fund.cyber.node.model.bitcore.Block;
 import fund.cyber.node.model.bitcore.Header;
 import org.slf4j.Logger;
