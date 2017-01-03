@@ -6,14 +6,15 @@ var cyberchainClient = rpc.Client.$create(config.cyberchain.port, config.cyberch
 
 const maxStart = 4294967295;
 const size = 10;
+//FIXME duplicate code
 const systemTag = 'btc';
 
-function getLastAprovedBlock(callback, start) {
+function getLastApprovedBlock(callback, start) {
 
     if (!start) start = maxStart;
     if (start<size) start = size;
 
-    client.call('get_account_history', [config.cyberchain.nickname, start, 10], function (err, result) {
+    cyberchainClient.call('get_account_history', [config.cyberchain.nickname, start, 10], function (err, result) {
         if (!result.isArray()) {
             console.error('Account history get failed');
         }
@@ -31,11 +32,11 @@ function getLastAprovedBlock(callback, start) {
                 record[1].op[1].author == config.cyberchain.nickname &&
                 record[1].op[1].parent_author == '' &&
                 record[1].op[1].parent_permlink == systemTag) {
-                callback('/@' + record[1].op[1].author + '/' + record[1].op[1].permlink, record[1].op[1].title, record[1].op[1].json_metadata);
+                callback(record[1].op[1].author, record[1].op[1].permlink, record[1].op[1].title, record[1].op[1].json_metadata);
                 return;
             }
             if (record[1].op[0] == 'vote' && record[1].op[1].voter == config.cyberchain.nickname && record[1].op[1].weight > 0) {
-                callback('/@' + record[1].op[1].author + '/' + record[1].op[1].permlink);
+                callback(record[1].op[1].author, record[1].op[1].permlink);
                 return;
             }
         }
@@ -46,8 +47,13 @@ function getLastAprovedBlock(callback, start) {
     });
 }
 
-function getBlockByUrl(permlink, callback) {
-    //TODO
+function getBlockByAuthorAndPermlink(author, permlink, callback) {
+    cyberchainClient.call('get_content', [author, permlink], function (err, result) {
+        if (author != result.author || permlink != result.permlink) {
+            console.error('Transaction content get failed');
+        }
+        callback(result);
+    });
 }
 
 function makePost(trx, callback) {
@@ -63,5 +69,21 @@ function makePost(trx, callback) {
         });
 }
 
+function getBlockByHash(hash, callback) {
+    cyberchainClient.call('get_discussions_by_trending', [{tag:systemTag, limit: 10, start_permlink: hash}], function (err, result) {
+        if (err) {
+            console.error(err);
+        }
+        callback(result);
+    });
+}
 
-module.exports.getLastAprovedBlock = getLastAprovedBlock;
+function vote(author, permlink, voteValue, callback) {
+    //TODO
+}
+
+module.exports.getLastAprovedBlock = getLastApprovedBlock;
+module.exports.getBlockByAuthorAndPermlink = getBlockByAuthorAndPermlink;
+module.exports.getBlockByHash = getBlockByHash;
+module.exports.makePost = makePost;
+module.exports.vote = vote;
