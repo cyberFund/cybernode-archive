@@ -4,7 +4,7 @@ Polyblockchain full node
 
 #### Architecture
 
-![Architecture](https://cdn.rawgit.com/cyberFund/cybernode/master/cybernode.svg)
+![Architecture](https://cdn.rawgit.com/cyberFund/cybernode/master/cybernode_01.svg)
 
 
 #### Cyberchain comment data structure:
