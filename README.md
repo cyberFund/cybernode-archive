@@ -1,4 +1,5 @@
-# cybernode
-Several crypto currency node
+# Cybernode
+
+Polyblockchain full node
 
 ![Architecture](https://cdn.rawgit.com/cyberFund/cybernode/master/cybernode.svg)
