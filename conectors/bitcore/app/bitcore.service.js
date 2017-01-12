@@ -14,7 +14,11 @@ function getBlockHashByHeight(height, callback) {
 }
 
 function getBlockByHash(hash, callback) {
-    getData('/insight-api/block/' + hash, function(data) {return data;}, callback);
+    getData('/insight-api/block/' + hash, function(data) {
+        delete data.confirmations;
+        delete data.poolInfo;
+        return data;
+    }, callback);
 }
 
 function getData(path, projector, callback) {

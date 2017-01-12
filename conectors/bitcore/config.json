@@ -2,11 +2,13 @@
   "cyberchain" : {
     "host": "localhost",
     "port":8090,
-    "nickname": "dervish",
-    "key" : "P5HtvL23u1nF5pHrG3m9E9RprcxDb1JKTasEkefbboa2qVZHuskk"
+    "nickname": "somenick",
+    "key" : "P5..."
   },
   "insight" : {
     "host": "cybernode.cyber.fund",
     "port": 3001
-  }
+  },
+  "statusfile": "/var/local/bitcore.connector.status",
+  "indexerAllowOverride": false
 }
