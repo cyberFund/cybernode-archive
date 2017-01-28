@@ -1,0 +1,12 @@
+{
+  "rpc" : {
+    "host": "localhost",
+    "port":8092
+  },
+  "rethinkdb": {
+    "host": "localhost",
+    "port": 28015,
+    "authKey": "",
+    "db": "mock"
+  }
+}
