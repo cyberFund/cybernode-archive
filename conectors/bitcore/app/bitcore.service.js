@@ -21,7 +21,7 @@ function getBlockByHash(hash, callback) {
     }, callback);
 }
 
-function getData(path, projector, callback) {
+function getData(path, projector, doneCallback) {
 
     var options = {
         host: config.insight.host,
@@ -30,14 +30,14 @@ function getData(path, projector, callback) {
         path : path
     };
 
-    var req = http.request(options, callback = function(response) {
+    var req = http.request(options, function(response) {
         var str = '';
         response.on('data', function (chunk) {
             str += chunk;
         });
 
         response.on('end', function () {
-            callback(projector(JSON.parse(str)));
+            doneCallback(projector(JSON.parse(str)));
         });
     });
 

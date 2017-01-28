@@ -7,19 +7,18 @@ var validator = require('./app/validator');
 var status = {};
 
 statusService.readStatus(function (data) {
-    if (!data) {
-        status.source = constants.SOURCE_START_HEIGHT;
-        status.destination = constants.DESTINATION_START_HEIGHT;
-    } else {
-        status.source = data.source;
-        status.destination = data.destination;
-    }
-    async.parallel([indexNext, validating], function () {
-
-    });
+    status = data ? {source: data.source, destination: data.destination} :
+        {source: constants.SOURCE_START_HEIGHT, destination: constants.DESTINATION_START_HEIGHT};
+    async.parallel([indexNext, validateNext]);
 });
 
-function indexNext(callback) {
+/**
+ * Recursive method to read next source block and index it if needed.
+ *
+ * @name indexNext
+ * @returns {void}
+ */
+function indexNext() {
     indexer.index(status.source, function (exist) {
         if (exist) {
             status.source += 1;
@@ -27,21 +26,27 @@ function indexNext(callback) {
             indexNext();
         } else {
             setTimeout(function () {
-                indexNext(callback);
+                indexNext();
             }, constants.INDEXING_LISTEN_DELAY);
         }
     });
 }
 
-function validateNext(callback) {
+/**
+ * Recursive method to read next cyberchain block and validate data corresponding to source blockchain.
+ *
+ * @name validateNext
+ * @returns {void}
+ */
+function validateNext() {
     validator.validate(status.destination, function (exist) {
         if (exist) {
             status.destination += 1;
             statusService.writeStatus(status);
-            validateNext(callback);
+            validateNext();
         } else {
             setTimeout(function () {
-                validateNext(callback);
+                validateNext();
             }, constants.VALIDATING_LISTEN_DELAY);
         }
     });

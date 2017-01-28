@@ -1,10 +1,13 @@
+var async = require('async');
+
 var config = require('../config.json');
-var steem = require('steem');
+var constants = require('./constants');
 
 var rpc = require('json-rpc2');
-var cyberchainClient = rpc.Client.$create(config.cyberchain.port, config.cyberchain.host);
+var chain = rpc.Client.$create(config.cyberchain.port, config.cyberchain.host);
 
 const maxStart = 4294967295;
+const maxLimit = 100;
 const size = 10;
 
 function getLastApprovedBlock(callback, start) {
@@ -12,7 +15,7 @@ function getLastApprovedBlock(callback, start) {
     if (!start) start = maxStart;
     if (start < size) start = size;
 
-    cyberchainClient.call('get_account_history', [config.cyberchain.nickname, start, 10], function (err, result) {
+    chain.call('get_account_history', [config.cyberchain.nickname, start, 10], function (err, result) {
         if (!result.isArray()) {
             console.error('Account history get failed');
         }
@@ -43,40 +46,46 @@ function getLastApprovedBlock(callback, start) {
 }
 
 function getBlockByAuthorAndPermlink(author, permlink, callback) {
-    cyberchainClient.call('get_content', [author, permlink], function (err, result) {
-        if (author != result.author || permlink != result.permlink) {
-            console.error('Transaction content get failed');
-        }
+    chain.call('get_content', [author, permlink], function (err, result) {
         callback(result);
     });
 }
 
-function makePost(post, callback) {
-    steem.broadcast.comment(config.cyberchain.key, '', systemTag, config.cyberchain.nickname,
-        post.hash, post.hash, post.body, {system: systemTag, height: post.height}, callback);
-}
-
-function getBlockByHash(hash, callback) {
-    cyberchainClient.call('get_discussions_by_trending', [{
-        tag: systemTag,
-        limit: 10,
-        start_permlink: hash
-    }], function (err, result) {
-        if (err) {
-            console.error(err);
+//FIXME need to fix blockchain to allow return data reverse orderred
+function getPostedBlocksByHash(hash, callback) {
+    var start_author = null;
+    var start_permlink = null;
+    var posts = [];
+    var resultLength = Number.MAX_VALUE;
+    async.until(
+        function () {return resultLength < maxLimit;},
+        function (next) {getPostedBlocksByHashInternal(hash, start_author, start_permlink, function(err, result) {
+            if (err) {
+                next(err);
+            }
+            //FIXME maybe need to remove first one
+            posts = posts.concat(result);
+            resultLength = result.length;
+            if (posts.length != 0) {
+                var last = posts[posts.length-1];
+                start_author = last.start_author;
+                start_permlink = last.start_permlink;
+            }
+            next(null)
+        })},
+        function (err) {
+            callback(err, posts);
         }
-        callback(result);
-    });
+    );
 }
 
-function vote(author, permlink, weight, callback) {
-    steem.broadcast.vote(config.steem.key, config.steem.nickname, author, permlink, weight, function (err, result) {
-        callback();
-    });
+function getPostedBlocksByHashInternal(hash, start_author, start_permlink, callback) {
+    chain.call('get_discussions_by_created', [{tag: hash, start_author:start_author, start_permlink: start_permlink, limit: maxLimit}], callback);
 }
+
 
 function isPost(operation) {
-    return operation[0] == 'comment' && operation[1].parent_author == '' && operation[1].parent_permlink == systemTag;
+    return operation[0] == 'comment' && operation[1].parent_author == '' && operation[1].parent_permlink == constants.SYSTEM;
 }
 
 function isMyPost(operation) {
@@ -84,7 +93,11 @@ function isMyPost(operation) {
 }
 
 function getPostsFromBlockByHeight(height, callback) {
-    cyberchainClient.call('get_block', [height], function (err, result) {
+    chain.call('get_block', [height], function (err, data) {
+        if (!data) {
+            callback(null);
+            return;
+        }
         var posts = [];
         var txs = data.transactions;
         for (var i = 0; i < txs.length; i++) {
@@ -96,11 +109,11 @@ function getPostsFromBlockByHeight(height, callback) {
             }
         }
         callback(posts);
-    });
+    }, callback);
 }
 
 function checkMyVote(author, permlink, callback) {
-    cyberchainClient.call('get_content', [author, permlink], function (err, result) {
+    chain.call('get_content', [author, permlink], function (err, result) {
         for (var i = 0; i < result.active_votes.length; i++) {
             if (result.active_votes[i].voter == config.cyberchain.nickname) {
                 callback(result.active_votes[i].weight);
@@ -111,9 +124,86 @@ function checkMyVote(author, permlink, callback) {
     });
 }
 
+
+
+
+///// 
+//
+// cli wallet
+//
+
+var wallet = rpc.Client.$create(config.wallet.port, config.wallet.host);
+
+function vote(author, permlink, weight, callback) {
+    isWalletLocked(function(state) {
+       if (state) {
+           unlockWallet(function() {
+               voteInternal(author, permlink, weight, callback);
+           });
+       } else {
+           voteInternal(author, permlink, weight, callback);
+       }
+    });
+}
+
+function makePost(post, callback) {
+    isWalletLocked(function(state) {
+        if (state) {
+            unlockWallet(function() {
+                makePostInternal(post, callback);
+            });
+        } else {
+            makePostInternal(post, callback);
+        }
+    });
+}
+
+function isWalletLocked(callback) {
+    wallet.call('is_locked', [], function (err, result) {
+        if (err) {
+            console.error(err);
+        }
+        callback(result);
+    });
+}
+
+function unlockWallet(callback) {
+    wallet.call('unlock', [config.wallet.password], function (err, result) {
+        if (err) {
+            console.error(err);
+        }
+        callback();
+    });
+}
+
+function voteInternal(author, permlink, weight, callback) {
+    wallet.call('vote', [config.cyberchain.nickname, author, permlink, weight, true], function (err, result) {
+        if (err) {
+            console.error(err);
+        }
+        callback();
+    });
+}
+
+function makePostInternal(post, callback) {
+    wallet.call('post_comment', [config.cyberchain.nickname, post.hash, '', constants.SYSTEM, post.hash, post.body,
+        JSON.stringify({tags:[constants.SYSTEM, post.hash], system: constants.SYSTEM, height: post.height}), true], function (err, result) {
+        if (err) {
+            console.error(err);
+        }
+        callback();
+    });
+}
+
+
+//
+//
+/////
+
+
 module.exports.getLastAprovedBlock = getLastApprovedBlock;
 module.exports.getBlockByAuthorAndPermlink = getBlockByAuthorAndPermlink;
-module.exports.getBlockByHash = getBlockByHash;
+module.exports.getPostedBlocksByHash = getPostedBlocksByHash;
 module.exports.makePost = makePost;
 module.exports.vote = vote;
 module.exports.getPostsFromBlockByHeight = getPostsFromBlockByHeight;

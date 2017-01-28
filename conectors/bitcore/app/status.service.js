@@ -3,7 +3,7 @@ var fs = require('fs');
 
 function readStatus(callback) {
     fs.readFile(config.statusfile, 'utf8', function(err, contents) {
-        callback(JSON.parse(contents));
+        callback(!contents ? null : JSON.parse(contents));
     });
 }
 
