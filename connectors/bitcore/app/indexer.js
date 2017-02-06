@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var async = require('async');
 var config = require('../config.json');
 var bitcore = require('./bitcore.service');
@@ -41,12 +42,13 @@ function index(height, callback) {
                         next({finished: true, exist: true});
                     }
                 });
-            } else if (block != sourceBlock) {
+                //FIXME need to make safe parse
+            } else if (!_.isEqual(JSON.parse(block.body), sourceBlock)) {
                 //This means that indexer works incorrect now or have been before
                 if (config.indexerAllowOverride) {
                     next(null, sourceBlock);
                 } else {
-                    next("Fatal error. Indexer works incorrect or something. Please investigate.");
+                    next("Fatal error. Indexer works incorrect or something. Please investigate. Current:" + block.body + " Source:" + JSON.stringify(sourceBlock));
                 }
             }
         },

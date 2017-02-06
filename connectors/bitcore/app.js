@@ -10,6 +10,7 @@ statusService.readStatus(function (data) {
     status = data ? {source: data.source, destination: data.destination} :
         {source: constants.SOURCE_START_HEIGHT, destination: constants.DESTINATION_START_HEIGHT};
     async.parallel([indexNext, validateNext]);
+    console.info("Bitcore connector started");
 });
 
 /**

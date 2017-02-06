@@ -1,7 +1,12 @@
 {
-  "rpc" : {
+  "insight": {
+    "host": "cybernode.cyber.fund",
+    "port": 3001
+  },
+  "cyberchain": {
     "host": "localhost",
-    "port":8090
+    "port": 8092,
+    "nickname": "third"
   },
   "rethinkdb": {
     "host": "localhost",

@@ -22,7 +22,11 @@ function getAccountHistory(params, opt, callback) {
     processRequest(params, 3, function () {
         var author = params[0], start = params[1], length = params[2];
         rethinkService.getCommentsByAuthor(author, function (error, result) {
-            //TODO prepare data
+            result = result.map(function(val){
+                val.json_metadata = JSON.stringify(val.json);
+                delete val.json;
+                return [0, {op: ['comment', val]}];
+            });
             callback(error, result);
         });
     }, callback);
@@ -45,6 +49,8 @@ function prepareComment(comment) {
     comment.body = JSON.stringify(comment.body);
     comment.active_votes = constructActiveVotes(comment.votes);
     delete comment.votes;
+    comment.json_metadata = JSON.stringify(comment.json);
+    delete comment.json;
     return comment;
 }
 
@@ -52,7 +58,7 @@ function getDiscussionsByCreated(params, opt, callback) {
     logRequest('get_discussions_by_created', params);
     processRequest(params, 1, function () {
         var filter = params[0];
-        rethinkService.getCommentByTitle(filter.tag, function (error, comments) {
+        rethinkService.getCommentsByTag(filter.tag, function (error, comments) {
             comments = comments.map(prepareComment);
             callback(error, comments);
         });
@@ -132,7 +138,7 @@ function postComment(params, opt, callback) {
                 parent_permlink: params[3],
                 title: params[4],
                 body: JSON.parse(params[5]),
-                json: params[6],
+                json: JSON.parse(params[6]),
                 block: block + 1,
                 votes: []
             };
@@ -190,4 +196,5 @@ var processRequest = function (params, n, process, callback) {
 
 rethinkService.prepareDatabase(function (connection) {
     server.listen(config.rpc.port, config.rpc.host);
+    console.info("Cyberchain mock started on " + config.rpc.port + " port");
 });

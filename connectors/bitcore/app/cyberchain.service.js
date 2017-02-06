@@ -16,25 +16,26 @@ function getLastApprovedBlock(callback, start) {
     if (start < size) start = size;
 
     chain.call('get_account_history', [config.cyberchain.nickname, start, 10], function (err, result) {
-        if (!result.isArray()) {
+        //FIXME should not fall on no result
+        if (!Array.isArray(result)) {
             console.error('Account history get failed');
         }
         result.reverse();
         for (var i = 0; i < result.length; i++) {
             var record = result[i];
-            if (!record.isArray()) {
+            if (!Array.isArray(record)) {
                 console.error('Account history element get failed');
             }
             start = record[0];
-            if (!record[1].op.isArray()) {
+            if (!Array.isArray(record[1].op)) {
                 console.error('Account history op property get failed');
             }
             if (isMyPost(record[1].op)) {
-                callback(record[1].op[1].author, record[1].op[1].permlink, record[1].op[1].title, record[1].op[1].json_metadata, record[1].block);
+                getBlockByAuthorAndPermlink(record[1].op[1].author, record[1].op[1].permlink, callback);
                 return;
             }
             if (record[1].op[0] == 'vote' && record[1].op[1].voter == config.cyberchain.nickname && record[1].op[1].weight > 0) {
-                callback(record[1].op[1].author, record[1].op[1].permlink);
+                getBlockByAuthorAndPermlink(record[1].op[1].author, record[1].op[1].permlink, callback);
                 return;
             }
         }
@@ -66,7 +67,7 @@ function getPostedBlocksByHash(hash, callback) {
             //FIXME maybe need to remove first one
             posts = posts.concat(result);
             resultLength = result.length;
-            if (posts.length != 0) {
+            if (resultLength == maxLimit) {
                 var last = posts[posts.length-1];
                 start_author = last.start_author;
                 start_permlink = last.start_permlink;

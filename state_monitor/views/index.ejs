@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Bitcore sync state: <%= bitcore.height %> / <%= bitcore.blockChainHeight %> blocks</p>
+    <p>Cyberchain sync state: <%= chain.height %> / <%= chain.totalHeight %> blocks</p>
+    <p>Connector sync state: <%= connector.height %> blocks</p>
+  </body>
+</html>

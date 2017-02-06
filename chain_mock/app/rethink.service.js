@@ -1,6 +1,5 @@
 var config = require('./../config.json');
 var async = require('async');
-var rpc = require('json-rpc2');
 var r = require('rethinkdb');
 
 var rConnection;
@@ -101,7 +100,7 @@ function getCommentsByAuthor(author, callback) {
             console.log('Error: ' + err);
             return;
         }
-        callback(result);
+        callback(err, result);
     });
 }
 
@@ -137,6 +136,16 @@ function getCommentByTitle(title, callback) {
     //FIXME use index for filter
     //FIXME use index for order
     r.table(TABLE_NAME).filter({title: title}).orderBy('created').run(rConnection, callback);
+}
+
+function getCommentsByTag(tag, callback) {
+    //FIXME use index for filter
+    //FIXME use index for order
+    //FIXME why 100
+    r.table(TABLE_NAME).filter(function(comment) {
+            return comment("json")("tags").contains(tag)
+        }
+    ).orderBy('created').limit(100).run(rConnection, callback);
 }
 
 function getLastBlockNumber(callback) {
@@ -212,3 +221,4 @@ module.exports.getCommentByAuthorAndPermLink = getCommentByAuthorAndPermLink;
 module.exports.addVoteToComment = addVoteToComment;
 module.exports.getCommentByTitle = getCommentByTitle;
 module.exports.getCommentsByHeight = getCommentsByHeight;
+module.exports.getCommentsByTag = getCommentsByTag;
