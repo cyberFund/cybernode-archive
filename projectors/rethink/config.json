@@ -1,7 +1,7 @@
 {
   "rpc" : {
     "host": "localhost",
-    "port":8090
+    "port":8092
   },
   "rethinkdb": {
     "host": "localhost",

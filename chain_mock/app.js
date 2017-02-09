@@ -20,14 +20,28 @@ function status(args, opt, callback) {
 function getAccountHistory(params, opt, callback) {
     logRequest('get_account_history', params);
     processRequest(params, 3, function () {
-        var author = params[0], start = params[1], length = params[2];
-        rethinkService.getCommentsByAuthor(author, function (error, result) {
-            result = result.map(function(val){
+        //FIXME use start
+        var account = params[0], start = params[1], length = params[2];
+        rethinkService.getCommentsByAuthor(account, length, function (error, comments) {
+            comments = comments.map(function (val) {
                 val.json_metadata = JSON.stringify(val.json);
                 delete val.json;
-                return [0, {op: ['comment', val]}];
+                return {block: val.block, op: ['comment', val]};
             });
-            callback(error, result);
+            rethinkService.getVotesByVoter(account, length, function (error, votes) {
+                votes = votes.map(function (val) {
+                    val.json_metadata = JSON.stringify(val.json);
+                    delete val.json;
+                    return {block: val.block, op: ['vote', val]};
+                });
+
+                comments = comments.concat(votes).sort(function (a, b) {
+                    return b.block - a.block;
+                }).slice(0, length).map(function (val, i) {
+                    return [i, val];
+                }).reverse();
+                callback(error, comments);
+            });
         });
     }, callback);
 }
@@ -58,7 +72,7 @@ function getDiscussionsByCreated(params, opt, callback) {
     logRequest('get_discussions_by_created', params);
     processRequest(params, 1, function () {
         var filter = params[0];
-        rethinkService.getCommentsByTag(filter.tag, function (error, comments) {
+        rethinkService.getCommentsByTag(filter.tag, filter.limit, function (error, comments) {
             comments = comments.map(prepareComment);
             callback(error, comments);
         });
@@ -69,8 +83,14 @@ function getBlock (params, opt, callback) {
     logRequest('get_block', params);
     processRequest(params, 1, function () {
         var height = params[0];
-        rethinkService.getCommentsByHeight(height, function (error, result) {
-            callback(error, constructBlock(result));
+        rethinkService.getLastBlockNumber(function(number) {
+            if (number < height) {
+                callback(null, null);
+                return;
+            }
+            rethinkService.getCommentsByHeight(height, function (error, result) {
+                callback(error, constructBlock(result));
+            });
         });
     }, callback);
 }
@@ -105,7 +125,7 @@ function vote(params, opt, callback) {
             var vote = {
                 voter: params[0],
                 weight: params[3],
-                block: block
+                block: block + 1
             };
 
             rethinkService.addVoteToComment(author, permlink, vote, callback);
@@ -155,7 +175,7 @@ function postComment(params, opt, callback) {
 
 function constructBlock(comments) {
     if(comments.length == 0) {
-        return null;
+        return {transactions: []};
     }
     var operations = [];
     for (var i = 0; i< comments.length; i++) {

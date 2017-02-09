@@ -35,7 +35,7 @@ function index(height, callback) {
             if (!block) {
                 //user have not already post it
                 //check if somebody already has posted valid block
-                validator.findFirstValidBlockWithHash(sourceBlock.hash, sourceBlock, function (first) {
+                validator.findFirstValidBlockWithHash(sourceBlock.hash, sourceBlock, function (err, first) {
                     if (!first) {
                         next(null, sourceBlock);
                     } else {

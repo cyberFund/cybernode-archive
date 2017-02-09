@@ -1,26 +1,8 @@
 {
-  "real_config": {
-    "cyberchain": {
-      "host": "localhost",
-      "port": 8090,
-      "nickname": "somenick"
-    },
-    "wallet": {
-      "host": "localhost",
-      "port": 8091,
-      "password": "cliwalletpassword"
-    },
-    "insight": {
-      "host": "cybernode.cyber.fund",
-      "port": 3001
-    },
-    "statusfile": "/var/local/bitcore.connector.status",
-    "indexerAllowOverride": false
-  },
   "cyberchain": {
     "host": "localhost",
     "port": 8092,
-    "nickname": "third"
+    "nickname": "theone"
   },
   "wallet": {
     "host": "localhost",
@@ -28,10 +10,10 @@
     "password": "cliwalletpassword"
   },
   "insight": {
-    "host": "cybernode.cyber.fund",
+    "host": "localhost",
     "port": 3001
   },
-  "statusfile": "/var/local/bitcore.connector.status",
+  "statusfile": "./bitcore.connector.status",
   "indexerAllowOverride": false
 }
 

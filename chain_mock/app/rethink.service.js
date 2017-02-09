@@ -94,8 +94,36 @@ function createIndex(fields, connection, doneCallback) {
 // Get data
 ///////////
 
-function getCommentsByAuthor(author, callback) {
-    r.table(TABLE_NAME).filter({author: author}).orderBy(r.asc(BLOCK_FIELD_NAME)).run(rConnection, function (err, result) {
+function getCommentsByAuthor(author, limit, callback) {
+    r.table(TABLE_NAME).filter({author: author}).orderBy(r.desc(BLOCK_FIELD_NAME)).limit(limit).run(rConnection, function (err, result) {
+        if (err) {
+            console.log('Error: ' + err);
+            return;
+        }
+        callback(err, result);
+    });
+}
+
+function getVotesByVoter(voter, limit, callback) {
+    r.table(TABLE_NAME).filter(
+        function(c){
+            return c("votes").contains(
+                function (vote) {
+                    return vote("voter").eq(voter);
+                }
+            )
+        }
+    ).concatMap(function(c) {return c("votes").filter({"voter":  voter}).map(
+        function(vote) {return {
+            id:c("id"),
+            author: c("author"),
+            permlink: c("permlink"),
+            block: vote("block"),
+            voter: vote("voter"),
+            weight: vote("weight")
+        }
+        })
+    }).orderBy(r.desc(BLOCK_FIELD_NAME)).limit(limit).run(rConnection, function (err, result) {
         if (err) {
             console.log('Error: ' + err);
             return;
@@ -138,14 +166,14 @@ function getCommentByTitle(title, callback) {
     r.table(TABLE_NAME).filter({title: title}).orderBy('created').run(rConnection, callback);
 }
 
-function getCommentsByTag(tag, callback) {
+function getCommentsByTag(tag, limit, callback) {
     //FIXME use index for filter
     //FIXME use index for order
     //FIXME why 100
     r.table(TABLE_NAME).filter(function(comment) {
             return comment("json")("tags").contains(tag)
         }
-    ).orderBy('created').limit(100).run(rConnection, callback);
+    ).orderBy(r.desc('block')).limit(limit).run(rConnection, callback);
 }
 
 function getLastBlockNumber(callback) {
@@ -157,11 +185,16 @@ function getLastBlockNumber(callback) {
             callback(0);
             return;
         }
-        r.table(TABLE_NAME).max(BLOCK_FIELD_NAME).run(rConnection, function (err, result) {
+        r.table(TABLE_NAME).max(BLOCK_FIELD_NAME)(BLOCK_FIELD_NAME).run(rConnection, function (err, max1) {
             if (err) {
                 console.error(err);
             }
-            callback(result ? result.block : 1);
+            r.table(TABLE_NAME).concatMap(function(c) {return c("votes")}).max(BLOCK_FIELD_NAME)(BLOCK_FIELD_NAME).run(rConnection, function (err, max2) {
+                if (err && !err.message.startsWith("Cannot take the max of an empty stream.")) {
+                    console.error(err);
+                }
+                callback(max1 ? (max2 ? (Math.max(max1, max2)) : max1) : (max2 ? max2 : 1));
+            })
         });
     });
 }
@@ -217,6 +250,7 @@ module.exports.prepareDatabase = prepareDatabase;
 module.exports.insertComment = insertComment;
 module.exports.getLastBlockNumber = getLastBlockNumber;
 module.exports.getCommentsByAuthor = getCommentsByAuthor;
+module.exports.getVotesByVoter = getVotesByVoter;
 module.exports.getCommentByAuthorAndPermLink = getCommentByAuthorAndPermLink;
 module.exports.addVoteToComment = addVoteToComment;
 module.exports.getCommentByTitle = getCommentByTitle;

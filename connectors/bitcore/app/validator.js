@@ -112,7 +112,7 @@ function validatePost(post, doneCallback) {
             function (sourceBlock, weight, next) {
                 if (weight == 1000) {
                     //is post we validating is the first valid block
-                    findFirstValidBlockWithHash(post.permlink, post.body, function (err, firstPost) {
+                    findFirstValidBlockWithHash(post.permlink, JSON.parse(post.body), function (err, firstPost) {
                         if (!_.isEqual(post, firstPost)) {
                             weight = -1000;
                         }
@@ -150,7 +150,7 @@ function findFirstValidBlockWithHash(hash, body, callback) {
         if (posts) {
             posts.reverse();
             for (var i = 0; i < posts.length; i++) {
-                if (_.isEqual(posts[i].body, body)) {
+                if (_.isEqual(JSON.parse(posts[i].body), body)) {
                     callback(null, posts[i]);
                     return;
                 }
