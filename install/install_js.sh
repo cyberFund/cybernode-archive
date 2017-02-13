@@ -1,11 +1,3 @@
-docker stop bitcore
-docker rm -v bitcore
-docker run -d -p 8333:8333 -p 3001:3001 --name bitcore -v /data/bitcoin:/root/.bitcore sena/bitcore
-
-docker stop rethink
-docker rm -v rethink
-docker run -d -p 127.0.0.1:8080:8080 -p 127.0.0.1:28015:28015 --name rethink -v "/data/rethinkdb:/data" rethinkdb
-
 cd ../
 
 cd chain_mock
