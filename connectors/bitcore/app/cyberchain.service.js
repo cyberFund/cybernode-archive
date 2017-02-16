@@ -192,7 +192,7 @@ function makePostInternal(post, callback) {
         if (err) {
             console.error(err);
         }
-        callback();
+        callback(err);
     });
 }
 

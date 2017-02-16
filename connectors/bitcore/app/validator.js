@@ -106,15 +106,15 @@ function validatePost(post, doneCallback) {
                 });
             },
             function (sourceBlock, next) {
-                var weight = _.isEqual(sourceBlock, JSON.parse(post.body)) ? 1000 : -1000;
+                var weight = _.isEqual(sourceBlock, JSON.parse(post.body)) ? 100 : -100;
                 next(null, sourceBlock, weight);
             },
             function (sourceBlock, weight, next) {
-                if (weight == 1000) {
+                if (weight == 100) {
                     //is post we validating is the first valid block
                     findFirstValidBlockWithHash(post.permlink, JSON.parse(post.body), function (err, firstPost) {
                         if (!_.isEqual(post, firstPost)) {
-                            weight = -1000;
+                            weight = -100;
                         }
                         next(null, weight);
                     });
