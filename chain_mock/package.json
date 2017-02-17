@@ -1,6 +1,6 @@
 {
-  "name": "rethinksteem",
-  "version": "0.0.1",
+  "name": "cyberchainmock",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "start": "node ./app.js"

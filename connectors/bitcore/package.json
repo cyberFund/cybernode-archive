@@ -3,14 +3,15 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "node ./app.js"
   },
   "dependencies": {
     "async": "^2.1.4",
+    "fs": "0.0.1-security",
     "json-rpc2": "^1.0.2",
+    "lodash": "^4.17.4",
     "rethinkdb": "^2.3.3",
     "socket.io": "^1.7.2",
-    "socket.io-client": "^1.7.2",
-    "steem": "^0.3.31"
+    "socket.io-client": "^1.7.2"
   }
 }

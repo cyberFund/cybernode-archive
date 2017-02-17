@@ -58,6 +58,8 @@ async.waterfall([
     }
 
     startProcessing(connection);
+    console.info("RethinkDB projector started");
+
 });
 
 function createIndex(indexName, connection, callback) {
