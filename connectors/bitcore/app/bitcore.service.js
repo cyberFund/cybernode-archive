@@ -1,4 +1,5 @@
 var config = require('../config.json');
+var async = require('async');
 var http = require('http');
 var socketClient = require('socket.io-client');
 
@@ -10,15 +11,34 @@ function getBlockByHeight(height, callback) {
 }
 
 function getBlockHashByHeight(height, callback) {
-    getData('/insight-api/block-index/' + height, function(data) {return data.blockHash;}, callback);
+    getDataUntilSuccess('/insight-api/block-index/' + height, function(data) {return data.blockHash;}, callback);
 }
 
 function getBlockByHash(hash, callback) {
-    getData('/insight-api/block/' + hash, function(data) {
+    getDataUntilSuccess('/insight-api/block/' + hash, function(data) {
         delete data.confirmations;
         delete data.poolInfo;
         return data;
     }, callback);
+}
+
+function getDataUntilSuccess(path, projector, doneCallback) {
+    var completed = false;
+
+    async.until(
+        function() {
+            return completed;
+        },
+        function (next) {
+            getData(path, projector, function(err, data) {
+                if (!err) {
+                    completed = true;
+                    doneCallback(data);
+                }
+                next();
+            });
+        },
+        function() {});
 }
 
 function getData(path, projector, doneCallback) {
@@ -37,15 +57,28 @@ function getData(path, projector, doneCallback) {
         });
 
         response.on('end', function () {
-            doneCallback(projector(JSON.parse(str)));
+            if (str == "Not found") {
+                doneCallback("Not found");
+                console.warn("Not found. Path: " + path);
+                return;
+            }
+            doneCallback(null, projector(JSON.parse(str)));
         });
+
+    });
+
+    req.on('error', function(err) {
+        if (err.message.code == 'ETIMEDOUT') {
+            console.warn("timeout");
+            getData(path, projector, doneCallback);
+        }
     });
 
     req.end();
 }
 
 var connected = false;
-
+/*
 function listenNewBlocks(callback) {
     var socket = socketClient('http://'+config.insight.host+':'+config.insight.port+'/');
     socket.on('connect', function(){
@@ -59,8 +92,8 @@ function listenNewBlocks(callback) {
         connected = false;
     });
 }
-
+ module.exports.listenNewBlocks = listenNewBlocks;
+*/
 module.exports.getBlockHashByHeight = getBlockHashByHeight;
 module.exports.getBlockByHash = getBlockByHash;
 module.exports.getBlockByHeight = getBlockByHeight;
-module.exports.listenNewBlocks = listenNewBlocks;

@@ -14,7 +14,9 @@
     "port": 3001
   },
   "statusfile": "./bitcore.connector.status",
-  "indexerAllowOverride": false
+  "indexerAllowOverride": false,
+  "multyAccounts": 1000,
+  "txOnly": true
 }
 
 
