@@ -55,7 +55,9 @@ function prepareAccounts(next) {
                 }
                 async.forEach(nicknames, function (nick, callback) {
                     cyberchainService2.createAccount(nick, function(err) {
-                        console.error(err);
+                        if (err) {
+                            console.error("Create account: " + err);
+                        }
                         callback()
                     });
                 }, function (err) {
@@ -76,7 +78,9 @@ function transferVestingShare(callback) {
     async.forEach(nicknames, function (nick, callback) {
         cyberchainService2.transfer(nick, callback);
     }, function (err) {
-        console.error(err);
+        if (err) {
+            console.error("transferVestingShare: " + err);
+        }
         if (callback) {
             callback();
         }

@@ -164,7 +164,7 @@ function makePost(post, callback) {
 function isWalletLocked(callback) {
     wallet.call('is_locked', [], function (err, result) {
         if (err) {
-            console.error(err);
+            console.error('is_locked: ' + err);
         }
         callback(result);
     });
@@ -173,7 +173,7 @@ function isWalletLocked(callback) {
 function unlockWallet(callback) {
     wallet.call('unlock', [config.wallet.password], function (err, result) {
         if (err) {
-            console.error(err);
+            console.error('unlock: ' + err);
         }
         callback();
     });
@@ -182,7 +182,7 @@ function unlockWallet(callback) {
 function voteInternal(author, permlink, weight, callback) {
     wallet.call('vote', [userManager.getUser(), author, permlink, weight, true], function (err, result) {
         if (err) {
-            console.error(err);
+            console.error('vote: ' + err);
         }
         callback();
     });

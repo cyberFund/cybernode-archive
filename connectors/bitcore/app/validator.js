@@ -40,7 +40,7 @@ function actualizePosts(posts , callback) {
     }
     async.parallel(actualizers, function (err, actualPosts) {
         if (err) {
-            console.error(err);
+            console.error("actualizePosts: " + err);
         }
         callback(actualPosts);
     });
@@ -62,7 +62,7 @@ function validatePosts(posts , callback) {
     }
     async.parallel(validators, function (err, results) {
         if (err) {
-            console.error(err);
+            console.error("validatePosts: " + err);
         }
         callback(true);
     })

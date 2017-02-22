@@ -68,7 +68,7 @@ function index(height, callback) {
     ], function (err) {
         if (err) {
             if (!err.finished) {
-                console.log(err);
+                console.log("index: " + err);
                 callback(false);
             } else {
                 callback(err.exist);

@@ -52,7 +52,12 @@ function createAccount(nickname, callback) {
 function isWalletLocked(callback) {
     wallet.call('is_locked', [], function (err, result) {
         if (err) {
-            console.error(err);
+            if (err.message == "Have no response object") {
+                isWalletLocked(callback);
+                console.error('is_locked: Have no response object');
+                return;
+            }
+            console.error('is_locked:' + err);
         }
         callback(result);
     });
@@ -61,7 +66,7 @@ function isWalletLocked(callback) {
 function unlockWallet(callback) {
     wallet.call('unlock', [config.wallet.password], function (err, result) {
         if (err) {
-            console.error(err);
+            console.error('unlock: ' + err);
         }
         callback();
     });
@@ -70,7 +75,7 @@ function unlockWallet(callback) {
 function transferInternal(nickname, callback) {
     wallet.call('transfer_to_vesting', [config.cyberchain.nickname, nickname, "10000.000 GOLOS", true], function (err, result) {
         if (err) {
-            console.error(err);
+            console.error('transfer_to_vesting: ' + err);
         }
         callback(err);
     });
@@ -79,7 +84,7 @@ function transferInternal(nickname, callback) {
 function createAccountInternal(nickname, callback) {
     wallet.call('create_account', [config.cyberchain.nickname, nickname, '', true], function (err, result) {
         if (err) {
-            console.error(err);
+            console.error('create_account: ' + err);
         }
         callback(err);
     });

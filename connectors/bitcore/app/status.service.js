@@ -10,7 +10,7 @@ function readStatus(callback) {
 function writeStatus(status) {
     fs.writeFile(config.statusfile, JSON.stringify(status), function(err) {
         if(err) {
-            return console.log(err);
+            return console.log("Write status:" + err);
         }
     });
 }
