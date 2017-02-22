@@ -72,6 +72,11 @@ function getData(path, projector, doneCallback) {
             console.warn("timeout");
             getData(path, projector, doneCallback);
         }
+        if (err.message.code == "ECONNRESET") {
+            console.warn("connection reset");
+            getData(path, projector, doneCallback);
+        }
+
     });
 
     req.end();
