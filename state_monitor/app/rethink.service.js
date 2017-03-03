@@ -10,6 +10,10 @@ const TABLE_NAME = 'block';
 const BLOCK_FIELD_NAME = 'height';
 
 function getLastBlockNumber(callback) {
+    if (!rConnection) {
+        callback('Connection error');
+        return;
+    }
     r.table(TABLE_NAME).count().run(rConnection, function (err, count) {
         if (err) {
             console.error(err);
@@ -22,7 +26,7 @@ function getLastBlockNumber(callback) {
             if (err) {
                 console.error(err);
             }
-            callback(result ? result.height : 1);
+            callback(null, result ? result.height : 1);
         });
     });
 }

@@ -6,3 +6,16 @@ body {
 a {
   color: #00B7FF;
 }
+
+.panel-body {
+  padding-top: 0;
+}
+.row {
+  padding: 5px 0 5px 0;
+}
+.caption {
+  border-bottom: 1px solid #bce8f1;
+  background-color: #f5f5f5;
+  font-weight: bold;
+  padding: 5px 0 5px 0;
+}

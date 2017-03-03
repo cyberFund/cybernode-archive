@@ -13,5 +13,9 @@
     "port": 28015,
     "authKey": "",
     "db": "projection"
+  },
+  "glances": {
+    "host": "localhost",
+    "port": 61208
   }
 }

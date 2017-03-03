@@ -43,8 +43,12 @@ function getData(path, projector, doneCallback) {
         });
 
         response.on('end', function () {
-            doneCallback(projector(JSON.parse(str)));
+            doneCallback(null, projector(JSON.parse(str)));
         });
+    });
+
+    req.on('error', function (err) {
+        doneCallback(err);
     });
 
     req.end();

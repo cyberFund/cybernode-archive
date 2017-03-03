@@ -14,9 +14,9 @@ function getLastApprovedBlock(callback, start) {
     if (start < size) start = size;
 
     chain.call('get_account_history', [config.cyberchain.nickname, start, 10], function (err, result) {
-        //FIXME should not fall on no result
-        if (!Array.isArray(result)) {
-            console.error('Account history get failed');
+        if (err) {
+            callback(err);
+            return;
         }
         if(result.length == 0) {
             //No history
@@ -54,9 +54,7 @@ function getLastApprovedBlock(callback, start) {
 }
 
 function getBlockByAuthorAndPermlink(author, permlink, callback) {
-    chain.call('get_content', [author, permlink], function (err, block) {
-        callback(block);
-    });
+    chain.call('get_content', [author, permlink], callback);
 }
 
 function getLastPostedBlock(callback) {
@@ -72,5 +70,5 @@ function isMyPost(operation) {
 }
 
 
-module.exports.getLastAprovedBlock = getLastApprovedBlock;
+module.exports.getLastApprovedBlock = getLastApprovedBlock;
 module.exports.getLastPostedBlock = getLastPostedBlock;

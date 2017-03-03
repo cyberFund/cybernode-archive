@@ -2,12 +2,75 @@
 <html>
   <head>
     <title><%= title %></title>
+    <link href="lib/bootstrap-3.1.1/css/bootstrap.css" rel="stylesheet">
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <meta http-equiv="refresh" content="5" />
   </head>
   <body>
     <h1><%= title %></h1>
-    <p>Bitcore sync state: <%= bitcore.height %> / <%= bitcore.blockChainHeight %> blocks</p>
-    <p>Cyberchain sync state: <%= chain.height %> blocks</p>
-    <p>Connector sync state: <%= connector.height %> blocks</p>
+    <div class="row">
+      <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+        <div class="panel panel-info">
+          <div class="panel-heading">Nodes</div>
+          <div class="panel-body">
+            <div class="row caption">
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">Client</div>
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">Sync State</div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">bitcore</div>
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6"><%= bitcore.height ? bitcore.height + '/' + bitcore.blockChainHeight : bitcore %></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+        <div class="panel panel-info">
+          <div class="panel-heading">Cyberchain</div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">Blocks</div>
+              <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8"><%= chain.height %></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+        <div class="panel panel-info">
+          <div class="panel-heading">Indexing</div>
+          <div class="panel-body">
+            <div class="row caption">
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">Databsase</div>
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">State</div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">RethinkDB</div>
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6"><%= connector.height %></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-info">
+      <div class="panel-heading">Resource Usage</div>
+      <div class="panel-body">
+        <div class="row caption">
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">CPU</div>
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">GPU</div>
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">RAM</div>
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">SSD</div>
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">HDD</div>
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Network</div>
+        </div>
+        <div class="row">
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"><%= glances.cpu %></div>
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"><%= glances.gpu %></div>
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"><%= glances.ram %></div>
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"><%= glances.ssd %></div>
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"><%= glances.hdd %></div>
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"><%= glances.net %></div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
