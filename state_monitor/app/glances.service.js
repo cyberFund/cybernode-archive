@@ -53,9 +53,13 @@ function getStatus(callback) {
     });
 }
 
+//FIXME How to determine what hdd is needed?
 function getFileSystemPercentUse(callback) {
     getData('/api/2/fs', function(data) {
-        return data[0].percent;
+        var fs = data.find(function(item) {
+            return item.mnt_point.startsWith('/etc');
+        });
+        return fs ? fs.percent : 'no data';
     }, callback);
 }
 
