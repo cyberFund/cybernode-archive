@@ -5,7 +5,7 @@ FROM ubuntu:xenial
 RUN apt-get update && \
 	apt-get install -y gcc-4.9 g++-4.9 cmake make libbz2-dev libdb++-dev libdb-dev && \
 	apt-get install -y libssl-dev openssl libreadline-dev autoconf libtool git && \
-	apt-get install -y autotools-dev build-essential g++ libbz2-dev libicu-dev python-dev wget doxygen python3 python3-dev libboost-all-dev curl && \
+	apt-get install -y autotools-dev build-essential g++ libbz2-dev libicu-dev python-dev wget doxygen python3 python3-dev python-setuptools libboost-all-dev curl && \
         apt-get clean -qy
 # P2P (seed) port
 EXPOSE 2229
@@ -24,5 +24,7 @@ RUN cd ~ && \
 VOLUME /golos
 WORKDIR /golos
 
+ADD ./start.sh /start.sh
+
 RUN echo "Please configure me! You need to mount a data directory onto /golos of this container to it to function correctly. (if you're using golos-in-a-box most of this is handled automatically)"
-CMD ["sh", "-c", "/usr/local/bin/golosd"]
+CMD ["/bin/bash", "/start.sh"]
