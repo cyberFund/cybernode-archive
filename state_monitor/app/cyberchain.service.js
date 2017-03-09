@@ -64,7 +64,7 @@ function getLastPostedBlock(callback) {
 
 function getChainHeight(callback) {
     chain.call('get_dynamic_global_properties', [{tag: constants.SYSTEM, limit: 1}], function(err, data) {
-        callback(err, data.current_aslot);
+        callback(err, data ? data.current_aslot : 'Connection error');
     });
 }
 

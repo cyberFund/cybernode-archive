@@ -77,10 +77,10 @@ function getMemoryPercentUse(callback) {
 
 function getNetworkUse(callback) {
     getData('/api/2/network', function(data) {
-        var net = data.find(function(item) {
+        var network = data.find(function(item) {
             return item.interface_name.startsWith('eth');
         });
-        return net ? net.cx : 'no data';
+        return network ? network.cx / network.time_since_update : 0;
     }, callback);
 }
 
