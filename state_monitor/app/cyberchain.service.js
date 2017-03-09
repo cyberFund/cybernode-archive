@@ -21,6 +21,7 @@ function getLastApprovedBlock(callback, start) {
         if(result.length == 0) {
             //No history
             callback(null, null);
+            return;
         }
         result.reverse();
         for (var i = 0; i < result.length; i++) {

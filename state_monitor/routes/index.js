@@ -56,6 +56,7 @@ router.get('/', function (req, res, theNext) {
                 next();
             });
         },
+        /*
         function (next) {
             chain.getLastPostedBlock(function (err, block) {
                 processRpcResponse(err, block, function (height) {
@@ -66,6 +67,7 @@ router.get('/', function (req, res, theNext) {
                 next();
             });
         },
+        */
         function(next) {
             rethink.getLastBlockNumber(function(err, height){
                 model.connector.height = err ? 'Connection error' : height + ' blocks';
