@@ -14,7 +14,7 @@
     "express": "~4.14.0",
     "json-rpc2": "^1.0.2",
     "morgan": "~1.7.0",
-    "rethinkdb": "^2.3.3",
+    "rethinkdb": "2.2.3",
     "serve-favicon": "~2.3.0"
   }
 }
