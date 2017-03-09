@@ -12,6 +12,7 @@ EXPOSE 2229
 # RPC ports
 EXPOSE 5000
 EXPOSE 8090
+EXPOSE 8091
 
 RUN cd ~ && \
 	git clone https://github.com/nxtpool/golos.git && \

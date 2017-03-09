@@ -4,9 +4,9 @@
     "port": 3001
   },
   "cyberchain": {
-    "host": "localhost",
-    "port": 8092,
-    "nickname": "theone"
+    "host": "state.cybernode.cyber.fund",
+    "port": 809,
+    "nickname": "cybertester"
   },
   "rethinkdb": {
     "host": "localhost",
@@ -15,7 +15,7 @@
     "db": "projection"
   },
   "glances": {
-    "host": "localhost",
+    "host": "cybernode.cyber.fund",
     "port": 61208
   }
 }
