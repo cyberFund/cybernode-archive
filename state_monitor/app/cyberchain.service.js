@@ -62,6 +62,13 @@ function getLastPostedBlock(callback) {
     chain.call('get_discussions_by_created', [{tag: constants.SYSTEM, limit: 1}], callback);
 }
 
+function getChainHeight(callback) {
+    chain.call('get_dynamic_global_properties', [{tag: constants.SYSTEM, limit: 1}], function(err, data) {
+        callback(err, data.current_aslot);
+    });
+}
+
+
 function isPost(operation) {
     return operation[0] == 'comment' && operation[1].parent_author == '' && operation[1].parent_permlink == constants.SYSTEM;
 }
@@ -73,3 +80,4 @@ function isMyPost(operation) {
 
 module.exports.getLastApprovedBlock = getLastApprovedBlock;
 module.exports.getLastPostedBlock = getLastPostedBlock;
+module.exports.getChainHeight = getChainHeight;

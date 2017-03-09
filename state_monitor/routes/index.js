@@ -46,7 +46,7 @@ router.get('/', function (req, res, theNext) {
         function (next) {
             chain.getLastApprovedBlock(function (err, block) {
                 processRpcResponse(err, block, function (height) {
-                    model.chain.height = height;
+                    model.chain.block = height;
                 }, function (data) {
                     if (!data) {
                         return 0;
@@ -56,6 +56,15 @@ router.get('/', function (req, res, theNext) {
                 next();
             });
         },
+        function (next) {
+            chain.getChainHeight(function (err, block) {
+                processRpcResponse(err, block, function (height) {
+                    model.chain.height = height;
+                });
+                next();
+            });
+        },
+
         /*
         function (next) {
             chain.getLastPostedBlock(function (err, block) {
