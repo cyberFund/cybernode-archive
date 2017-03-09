@@ -48,6 +48,9 @@ router.get('/', function (req, res, theNext) {
                 processRpcResponse(err, block, function (height) {
                     model.chain.height = height;
                 }, function (data) {
+                    if (!data) {
+                        return 0;
+                    }
                     return JSON.parse(data.json_metadata).height;
                 });
                 next();
