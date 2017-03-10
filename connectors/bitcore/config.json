@@ -15,7 +15,6 @@
   },
   "statusfile": "./bitcore.connector.status",
   "indexerAllowOverride": false,
-  "multyAccounts": 1000,
   "txOnly": true
 }
 
