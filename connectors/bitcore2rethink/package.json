@@ -1,0 +1,12 @@
+{
+  "name": "bitcore-connector",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node ./app.js"
+  },
+  "dependencies": {
+    "async": "^2.1.4",
+    "rethinkdb": "^2.3.3"
+  }
+}

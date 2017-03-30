@@ -1,0 +1,14 @@
+{
+  "insight": {
+    "host": "bitcore.cybernode.cyber.fund",
+    "port": 80
+  },
+  "rethinkdb": {
+    "host": "localhost",
+    "port": 28015,
+    "password": "secret",
+    "db": "bitcoin"
+  }
+}
+
+
