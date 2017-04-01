@@ -1,7 +1,6 @@
 var config = require('../config.json');
 var async = require('async');
 var http = require('http');
-var socketClient = require('socket.io-client');
 
 
 function getBlockByHeight(height, callback) {
@@ -18,6 +17,13 @@ function getBlockByHash(hash, callback) {
     getDataUntilSuccess('/insight-api/block/' + hash, function(data) {
         delete data.confirmations;
         delete data.poolInfo;
+        return data;
+    }, callback);
+}
+
+function getTxById(id, callback) {
+    getDataUntilSuccess('/insight-api/tx/' + id, function(data) {
+        delete data.confirmations;
         return data;
     }, callback);
 }
@@ -76,6 +82,10 @@ function getData(path, projector, doneCallback) {
             console.warn("connection reset");
             getData(path, projector, doneCallback);
         }
+        if (err.code == "ECONNREFUSED") {
+            console.warn(err.message);
+            doneCallback(err);
+        }
 
     });
 
@@ -102,3 +112,4 @@ function listenNewBlocks(callback) {
 module.exports.getBlockHashByHeight = getBlockHashByHeight;
 module.exports.getBlockByHash = getBlockByHash;
 module.exports.getBlockByHeight = getBlockByHeight;
+module.exports.getTxById = getTxById;

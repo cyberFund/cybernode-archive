@@ -14,13 +14,14 @@ function getLastApprovedBlock(callback, start) {
     if (start < size) start = size;
 
     chain.call('get_account_history', [config.cyberchain.nickname, start, 10], function (err, result) {
-        //FIXME should not fall on no result
-        if (!Array.isArray(result)) {
-            console.error('Account history get failed');
+        if (err) {
+            callback(err);
+            return;
         }
         if(result.length == 0) {
             //No history
             callback(null, null);
+            return;
         }
         result.reverse();
         for (var i = 0; i < result.length; i++) {
@@ -54,14 +55,19 @@ function getLastApprovedBlock(callback, start) {
 }
 
 function getBlockByAuthorAndPermlink(author, permlink, callback) {
-    chain.call('get_content', [author, permlink], function (err, block) {
-        callback(block);
-    });
+    chain.call('get_content', [author, permlink], callback);
 }
 
 function getLastPostedBlock(callback) {
     chain.call('get_discussions_by_created', [{tag: constants.SYSTEM, limit: 1}], callback);
 }
+
+function getChainHeight(callback) {
+    chain.call('get_dynamic_global_properties', [{tag: constants.SYSTEM, limit: 1}], function(err, data) {
+        callback(err, data ? data.current_aslot : 'Connection error');
+    });
+}
+
 
 function isPost(operation) {
     return operation[0] == 'comment' && operation[1].parent_author == '' && operation[1].parent_permlink == constants.SYSTEM;
@@ -72,5 +78,6 @@ function isMyPost(operation) {
 }
 
 
-module.exports.getLastAprovedBlock = getLastApprovedBlock;
+module.exports.getLastApprovedBlock = getLastApprovedBlock;
 module.exports.getLastPostedBlock = getLastPostedBlock;
+module.exports.getChainHeight = getChainHeight;

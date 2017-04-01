@@ -1,20 +1,21 @@
 {
   "cyberchain": {
     "host": "localhost",
-    "port": 8092,
-    "nickname": "theone"
+    "port": 8090,
+    "nickname": "cybertester"
   },
   "wallet": {
     "host": "localhost",
-    "port": 8092,
-    "password": "cliwalletpassword"
+    "port": 8091,
+    "password": "verysecret"
   },
   "insight": {
-    "host": "localhost",
+    "host": "cybernode.cyber.fund",
     "port": 3001
   },
   "statusfile": "./bitcore.connector.status",
-  "indexerAllowOverride": false
+  "indexerAllowOverride": false,
+  "txOnly": true
 }
 
 

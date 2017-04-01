@@ -3,14 +3,20 @@ var constants = require('./app/constants');
 var statusService = require('./app/status.service');
 var indexer = require('./app/indexer');
 var validator = require('./app/validator');
+var test = require('./app/test');
 
 var status = {};
 
+const TEST_MODE = process.argv.includes('test');
+
 statusService.readStatus(function (data) {
     status = data ? {source: data.source, destination: data.destination} :
-        {source: constants.SOURCE_START_HEIGHT, destination: constants.DESTINATION_START_HEIGHT};
-    async.parallel([indexNext, validateNext]);
-    console.info("Bitcore connector started");
+    {source: constants.SOURCE_START_HEIGHT, destination: constants.DESTINATION_START_HEIGHT};
+    if (TEST_MODE) {
+        test.run();
+    } else {
+        async.parallel([indexNext, validateNext]);
+    }
 });
 
 /**
@@ -52,3 +58,4 @@ function validateNext() {
         }
     });
 }
+

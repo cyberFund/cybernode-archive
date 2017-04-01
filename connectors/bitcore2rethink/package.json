@@ -1,5 +1,5 @@
 {
-  "name": "rethinksteem",
+  "name": "bitcore-connector",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -7,7 +7,6 @@
   },
   "dependencies": {
     "async": "^2.1.4",
-    "json-rpc2": "^1.0.2",
-    "rethinkdb": "2.2.3"
+    "rethinkdb": "^2.3.3"
   }
 }
