@@ -1,0 +1,13 @@
+{
+  "name": "bitcore-ipfs-connector",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node ./app.js"
+  },
+  "dependencies": {
+    "async": "^2.1.4",
+    "orbit-db": "^0.17.3",
+    "rethinkdb": "^2.3.3"
+  }
+}
