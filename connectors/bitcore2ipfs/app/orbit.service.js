@@ -1,9 +1,8 @@
 const config = require('./../config.json');
 const async = require('async');
-const IPFS = require('ipfs');
+const IpfsDaemon = require('ipfs-daemon/src/ipfs-node-daemon');
 const OrbitDB = require('orbit-db');
 
-var ipfs;
 var orbitdb;
 var docstore;
 
@@ -12,10 +11,21 @@ var docstore;
 ////////////////////
 
 function prepareDatabase(doneCallback) {
-    ipfs = new IPFS()
-    orbitdb = new OrbitDB(ipfs)
-    docstore = orbitdb.docstore('cybernode-test')
-    doneCallback(connection, { indexBy: 'key' });
+    var ipfs = new IpfsDaemon();
+    ipfs.on('error',
+        function (err) {
+            console.error(err);
+        }
+    );
+
+    ipfs.on('ready',
+        function () {
+            const orbit = new OrbitDB(ipfs, 'benchmark');
+            docstore = orbit.docstore('cybernode-test', { indexBy: 'key' });
+            doneCallback();
+        }
+    );
+
 }
 
 ////////////
@@ -23,12 +33,12 @@ function prepareDatabase(doneCallback) {
 ////////////
 
 function insertBlock(block, callback) {
-    block.key='block'+block.hash;
+    block.key='block-'+block.hash;
     docstore.put(block).then(callback); 
 }
 
 function insertTx(tx, callback) {
-    tx.key='tx'+tx.txid;
+    tx.key='tx-'+tx.txid;
     docstore.put(tx).then(callback); 
 }
 
@@ -38,35 +48,62 @@ function insertTx(tx, callback) {
 ///////////
 
 function getBlockByHash(hash, callback) {
-    docstore.get('block'+hash).then((result) => callback(result.length > 0 ? result[0] : null));
+    var result = docstore.get('block-' + hash);
+    callback(result.length > 0 ? result[0] : null);
 }
 
-function getBlockByHash(hash, callback) {
-    docstore.get('tx'+hash).then((result) => callback(result.length > 0 ? result[0] : null));
+function getTxByTxid(txid, callback) {
+    var result = docstore.get('tx-' + txid);
+    callback(result.length > 0 ? result[0] : null);
 }
 
 /////////////
 // Agregation
 /////////////
 function hasHeight(height, callback) {
-    docstore.query((e)=> e.height == height).then((result) => callback(result.length > 0));
+    var result = docstore.query(function (e) {
+        return e.height == height;
+    });
+    callback(result.length > 0);
 }
 
 function getHeight(doneCallback) {
-    var q = {min:0, max:1, limited: false};
-    async.until(() => return q.limited && q.min + 1 == q.max,
-	(callback) => searchForBorder(q, (next) => {q = next; callback();}),
-	(err) => doneCallback(q.min));
+    hasHeight(0, function (exists) {
+        if (!exists) {
+            doneCallback(-1);
+            return;
+        }
+
+        var q = {min: 0, max: 1, limited: false};
+        async.until(
+            function () {
+                return q.limited && q.min + 1 == q.max;
+            },
+            function (callback) {
+                searchForBorder(q, function (next) {
+                    q = next;
+                    callback();
+                })
+            },
+            function (err) {
+                doneCallback(q.min)
+            });
+    });
 }
 
 function searchForBorder(search, callback) {
     if (!search.limited) {
-	hasHeight(search.max * 2, (has) => callback({min: search.max, max: 2 * search.max, limited:!has}));
+        hasHeight(search.max * 2, function (has) {
+            callback({min: search.max, max: 2 * search.max, limited: !has})
+        });
     } else {
-	hasHeight((search.min + search.max) / 2, (has) => callback({
-	    min: has ? (search.min + search.max) / 2 : search.min, 
-	    max: has ? search.max : (search.min + search.max) / 2, 
-	    limited: true}));
+        hasHeight((search.min + search.max) / 2, function (has) {
+            callback({
+                min: has ? (search.min + search.max) / 2 : search.min,
+                max: has ? search.max : (search.min + search.max) / 2,
+                limited: true
+            })
+        });
     }
 }
 
