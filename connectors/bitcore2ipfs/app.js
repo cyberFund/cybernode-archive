@@ -1,12 +1,12 @@
 var constants = require('./app/constants');
 var indexer = require('./app/indexer');
-var rethink = require('./app/rethink.service');
+var orbit = require('./app/orbit.service');
 
 var height;
 
-rethink.prepareDatabase(function() {
-    rethink.getHeight(function (data) {
-        height = data ? data : constants.SOURCE_START_HEIGHT;
+orbit.prepareDatabase(function() {
+    orbit.getHeight(function (data) {
+        height = data ? data+1 : constants.SOURCE_START_HEIGHT;
         indexNext();
     });
 });
