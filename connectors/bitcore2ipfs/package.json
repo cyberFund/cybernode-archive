@@ -1,0 +1,14 @@
+{
+  "name": "bitcore-ipfs-connector",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node ./app.js"
+  },
+  "dependencies": {
+    "async": "^2.1.4",
+    "ipfs": "^0.23.1",
+    "ipfs-daemon": "^0.3.1",
+    "orbit-db": "^0.17.3",
+  }
+}

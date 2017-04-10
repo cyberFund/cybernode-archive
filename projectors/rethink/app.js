@@ -85,7 +85,6 @@ function waitForIndex(indexName, connection, callback) {
 
 function startProcessing(connection) {
     rConnection = connection;
-    //FIXME get from DB
     r.table('block').max('height').run(rConnection, function (err, result) {
         if (err) {
             getBlock(1);
