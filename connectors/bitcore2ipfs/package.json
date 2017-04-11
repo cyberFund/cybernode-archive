@@ -7,8 +7,6 @@
   },
   "dependencies": {
     "async": "^2.1.4",
-    "ipfs": "^0.23.1",
-    "ipfs-daemon": "^0.3.1",
-    "orbit-db": "^0.17.3",
+    "json-rpc2": "^1.0.2"
   }
 }

@@ -2,6 +2,10 @@
   "insight": {
     "host": "bitcore.cybernode.cyber.fund",
     "port": 80
+  },
+  "ipfsService" : {
+    "host": "localhost",
+    "port": 8000
   }
 }
 
