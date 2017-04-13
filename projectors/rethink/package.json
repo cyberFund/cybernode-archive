@@ -1,5 +1,5 @@
 {
-  "name": "rethinksteem",
+  "name": "ipfs2rethink",
   "version": "0.0.1",
   "private": true,
   "scripts": {

@@ -16,6 +16,7 @@ function prepareDatabase(doneCallback) {
     config.ipfs.LogDirectory = dataDir + '/log';
 
     var ipfs = new IpfsDaemon(config.ipfs);
+    var prepared = false;
 
     ipfs.on('error',
         function (err) {
@@ -28,7 +29,19 @@ function prepareDatabase(doneCallback) {
             orbit = new OrbitDB(ipfs, 'cybernode');
             docstore = orbit.docstore('cybernode-test', { indexBy: 'key' });
             //FIXME if db empty freezing here
-            docstore.events.on('ready', doneCallback);
+            docstore.events.on('ready', function() {
+                if (!prepared) {
+                    prepared = true;
+                    doneCallback();
+                }
+            });
+            setTimeout(function () {
+                if (!prepared) {
+                    prepared = true;
+                    doneCallback();
+                }
+            }, 3000);
+
             docstore.load();
         }
     );
@@ -133,5 +146,6 @@ module.exports.insertBlock = insertBlock;
 module.exports.insertTx = insertTx;
 module.exports.getHeight = getHeight;
 module.exports.getBlockByHash = getBlockByHash;
+module.exports.getBlockByHeight = getBlockByHeight;
 module.exports.getTxByTxid = getTxByTxid;
 module.exports.disconnect = disconnect;
