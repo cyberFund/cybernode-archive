@@ -1,4 +1,4 @@
-cd ../connectors/bitcore
+cd ../connectors/bitcore2ipfs
 docker stop bitcore_connector
 docker rm -v bitcore_connector
 docker rmi -f bitcore_connector
