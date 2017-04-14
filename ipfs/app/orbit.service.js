@@ -12,36 +12,48 @@ var docstore;
 
 function prepareDatabase(doneCallback) {
 
+    console.log('Data dir: ' + config.ipfs.IpfsDataDir);
     const dataDir = config.ipfs.IpfsDataDir;
     config.ipfs.LogDirectory = dataDir + '/log';
 
     var ipfs = new IpfsDaemon(config.ipfs);
     var prepared = false;
 
+    console.log('Waiting for database...');
+
     ipfs.on('error',
         function (err) {
+            console.log('Error handled');
             console.error(err);
         }
     );
 
     ipfs.on('ready',
         function () {
+            console.log('Ready state handled');
             orbit = new OrbitDB(ipfs, 'cybernode');
-            docstore = orbit.docstore('cybernode-test', { indexBy: 'key' });
+            console.log('Database initialized');
+            docstore = orbit.docstore('mainstore', { indexBy: 'key' });
+            console.log('Docstore initialized');
             //FIXME if db empty freezing here
             docstore.events.on('ready', function() {
+                console.log('Database ready');
                 if (!prepared) {
                     prepared = true;
+                    console.log('Callback');
                     doneCallback();
                 }
             });
             setTimeout(function () {
+                console.log('Timeout');
                 if (!prepared) {
                     prepared = true;
+                    console.log('Callback');
                     doneCallback();
                 }
             }, 3000);
 
+            console.log('Waiting docstore load');
             docstore.load();
         }
     );

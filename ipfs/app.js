@@ -4,6 +4,7 @@ var rpc = require('json-rpc2');
 
 var height;
 
+console.log('Preparing database starting');
 orbit.prepareDatabase(function() {
     var server = rpc.Server.$create({
         'websocket': true, // is true by default
