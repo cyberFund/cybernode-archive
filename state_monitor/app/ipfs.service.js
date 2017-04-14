@@ -7,11 +7,11 @@ const BTC = 'btc';
 function getHeight(callback) {
     store.call('getHeight', [BTC], function (data) {
         if (data instanceof Error) {
-            console.warn('IPFS Get Heigh response:' + tdata);
+            console.warn('IPFS Get Heigh response:' + data);
             callback(undefined);
             return;
         }
-        callback(height);
+        callback(data);
     });
 }
 
