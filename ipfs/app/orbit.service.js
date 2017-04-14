@@ -23,14 +23,18 @@ function prepareDatabase(doneCallback) {
 
     ipfs.on('error',
         function (err) {
+            console.log('Error handled');
             console.error(err);
         }
     );
 
     ipfs.on('ready',
         function () {
+            console.log('Ready state handled');
             orbit = new OrbitDB(ipfs, 'cybernode');
-            docstore = orbit.docstore('cybernode-test', { indexBy: 'key' });
+            console.log('Database initialized');
+            docstore = orbit.docstore('mainstore', { indexBy: 'key' });
+            console.log('Docstore initialized');
             //FIXME if db empty freezing here
             docstore.events.on('ready', function() {
                 console.log('Database ready');
