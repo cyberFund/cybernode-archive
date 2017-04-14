@@ -3,7 +3,7 @@ var async = require('async');
 var rpc = require('json-rpc2');
 var r = require('rethinkdb');
 
-var store = rpc.Client.$create(config.ipfsRpc.port, config.ipfsRpc.host);
+var store = rpc.Client.$create(config.ipfsStore.port, config.ipfsStore.host);
 var rConnection;
 
 /*

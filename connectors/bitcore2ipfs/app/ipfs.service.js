@@ -1,9 +1,8 @@
 const config = require('./../config.json');
-const async = require('async');
 var rpc = require('json-rpc2');
 
 const BTC = 'btc';
-var client = rpc.Client.$create(config.ipfsService.port, config.ipfsService.host);
+var client = rpc.Client.$create(config.ipfsStore.port, config.ipfsStore.host);
 
 function insertBlock(block, callback) {
     client.call('insertBlock', [block, BTC], callback);
