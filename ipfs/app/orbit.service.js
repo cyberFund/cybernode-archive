@@ -12,11 +12,14 @@ var docstore;
 
 function prepareDatabase(doneCallback) {
 
+    console.log('Data dir: ' + config.ipfs.IpfsDataDir);
     const dataDir = config.ipfs.IpfsDataDir;
     config.ipfs.LogDirectory = dataDir + '/log';
 
     var ipfs = new IpfsDaemon(config.ipfs);
     var prepared = false;
+
+    console.log('Waiting for database...');
 
     ipfs.on('error',
         function (err) {
@@ -30,18 +33,23 @@ function prepareDatabase(doneCallback) {
             docstore = orbit.docstore('cybernode-test', { indexBy: 'key' });
             //FIXME if db empty freezing here
             docstore.events.on('ready', function() {
+                console.log('Database ready');
                 if (!prepared) {
                     prepared = true;
+                    console.log('Callback');
                     doneCallback();
                 }
             });
             setTimeout(function () {
+                console.log('Timeout');
                 if (!prepared) {
                     prepared = true;
+                    console.log('Callback');
                     doneCallback();
                 }
             }, 3000);
 
+            console.log('Waiting docstore load');
             docstore.load();
         }
     );
