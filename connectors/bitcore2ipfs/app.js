@@ -6,7 +6,7 @@ var height;
 
 ipfs.getHeight(function (data) {
     if (data instanceof Error) {
-        log.error(data)
+        console.error(data)
         return;
     }
     height = data ? data+1 : constants.SOURCE_START_HEIGHT;
