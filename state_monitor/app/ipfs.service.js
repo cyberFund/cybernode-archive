@@ -14,3 +14,5 @@ function getHeight(callback) {
         callback(height);
     });
 }
+
+module.exports.getHeight = getHeight;
