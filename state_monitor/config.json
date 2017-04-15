@@ -3,10 +3,9 @@
     "host": "localhost",
     "port": 3001
   },
-  "cyberchain": {
-    "host": "state.cybernode.cyber.fund",
-    "port": 809,
-    "nickname": "cybertester"
+  "ipfsStore": {
+    "host": "localhost",
+    "port": 8000
   },
   "rethinkdb": {
     "host": "localhost",

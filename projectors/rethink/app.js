@@ -3,7 +3,7 @@ var async = require('async');
 var rpc = require('json-rpc2');
 var r = require('rethinkdb');
 
-var client = rpc.Client.$create(config.rpc.port, config.rpc.host);
+var store = rpc.Client.$create(config.ipfsStore.port, config.ipfsStore.host);
 var rConnection;
 
 /*
@@ -82,12 +82,14 @@ function waitForIndex(indexName, connection, callback) {
     });
 }
 
+const BTC = 'btc';
+const DATA_REQUEST_DELAY = 3000;
 
 function startProcessing(connection) {
     rConnection = connection;
     r.table('block').max('height').run(rConnection, function (err, result) {
         if (err) {
-            getBlock(1);
+            getBlock(0);
             return;
         }
         getBlock(result.height + 1);
@@ -95,18 +97,18 @@ function startProcessing(connection) {
 
 }
 
-//upon to https://steemit.github.io/steemit-docs/
+
 function getBlock(number) {
-    client.call('get_block', [number], function (err, result) {
-        if (!result) {
+    store.call('getBlockByHeight', [number, BTC], function (err, result) {
+        if (!result || result.length == 0) {
             setTimeout(function () {
                 getBlock(number);
-            }, 3000);
+            }, DATA_REQUEST_DELAY);
             return;
         }
-        result.height = number;
-        result.createdAt = r.now();
-        insertBlock(result)
+        result[0].height = number;
+        result[0].createdAt = r.now();
+        insertBlock(result[0])
 
     });
 

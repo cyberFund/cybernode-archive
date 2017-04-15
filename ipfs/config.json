@@ -1,0 +1,18 @@
+{
+  "rpc": {
+    "port": 8000
+  },
+  "ipfs" : {
+    "IpfsDataDir": "/data/ipfs",
+    "Flags": ["--enable-pubsub-experiment"],
+    "Addresses": {
+      "API": "/ip4/127.0.0.1/tcp/5001",
+      "Swarm": ["/ip4/0.0.0.0/tcp/4001"],
+      "Gateway": "/ip4/0.0.0.0/tcp/8080"
+    },
+    "SignalServer": null
+
+  }
+}
+
+

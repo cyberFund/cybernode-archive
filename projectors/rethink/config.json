@@ -1,12 +1,12 @@
 {
-  "rpc" : {
+  "ipfsStore" : {
     "host": "localhost",
-    "port":8092
+    "port":8000
   },
   "rethinkdb": {
     "host": "localhost",
     "port": 28015,
-    "authKey": "",
+    "authKey": "somepass",
     "db": "projection"
   }
 }

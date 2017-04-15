@@ -3,7 +3,7 @@ var router = express.Router();
 var async = require('async');
 
 var bitcore = require('../app/bitcore.service');
-var chain = require('../app/cyberchain.service');
+var ipfs = require('../app/ipfs.service');
 var rethink = require('../app/rethink.service');
 var glances = require('../app/glances.service');
 
@@ -36,31 +36,22 @@ router.get('/', function (req, res, theNext) {
     var model = {title: 'State monitor', bitcore: {}, chain: {}, connector: {}};
     async.parallel([
         function(next) {
+            console.log('bitcore get sync status started');
             bitcore.getSync(function (err, data) {
                 processHttpResponse(err, data, function(data) {
                     model.bitcore = data;
                 });
+                console.log('bitcore get sync status ended');
                 next();
             });
         },
         function (next) {
-            chain.getLastApprovedBlock(function (err, block) {
-                processRpcResponse(err, block, function (height) {
-                    model.chain.block = height;
-                }, function (data) {
-                    if (!data) {
-                        return 0;
-                    }
-                    return JSON.parse(data.json_metadata).height;
-                });
-                next();
-            });
-        },
-        function (next) {
-            chain.getChainHeight(function (err, block) {
+            console.log('chain get height started');
+            ipfs.getHeight(function (err, block) {
                 processRpcResponse(err, block, function (height) {
                     model.chain.height = height;
                 });
+                console.log('chain get height ended');
                 next();
             });
         },
@@ -78,8 +69,10 @@ router.get('/', function (req, res, theNext) {
         },
         */
         function(next) {
+            console.log('rethink get status started');
             rethink.getLastBlockNumber(function(err, height){
                 model.connector.height = err ? 'Connection error' : height + ' blocks';
+                console.log('rethink get status ended');
                 next();
             });
         },

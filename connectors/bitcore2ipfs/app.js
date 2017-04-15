@@ -1,14 +1,16 @@
 var constants = require('./app/constants');
 var indexer = require('./app/indexer');
-var orbit = require('./app/orbit.service');
+var ipfs = require('./app/ipfs.service.js');
 
 var height;
 
-orbit.prepareDatabase(function() {
-    orbit.getHeight(function (data) {
-        height = data ? data+1 : constants.SOURCE_START_HEIGHT;
-        indexNext();
-    });
+ipfs.getHeight(function (data) {
+    if (data instanceof Error) {
+        console.error(data)
+        return;
+    }
+    height = data ? data+1 : constants.SOURCE_START_HEIGHT;
+    indexNext();
 });
 
 /**
