@@ -11,7 +11,7 @@ function getHeight(callback) {
             callback("IPFS error");
             return;
         }
-        callback(null, data.message);
+        callback(null, data ? data.message : null);
     });
 }
 
