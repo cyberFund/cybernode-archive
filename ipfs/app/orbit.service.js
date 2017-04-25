@@ -116,7 +116,7 @@ function hasHeight(height, system, callback) {
 function getHeight(system, doneCallback) {
     hasHeight(0, system, function (exists) {
         if (!exists) {
-            doneCallback(null, -1);
+            doneCallback(-1);
             return;
         }
 
@@ -132,7 +132,7 @@ function getHeight(system, doneCallback) {
                 })
             },
             function (err) {
-                doneCallback(null, q.min)
+                doneCallback(q.min)
             });
     });
 }

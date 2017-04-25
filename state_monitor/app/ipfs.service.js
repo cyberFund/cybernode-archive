@@ -8,10 +8,10 @@ function getHeight(callback) {
     store.call('getHeight', [BTC], function (data) {
         if (data instanceof Error) {
             console.warn('IPFS Get Heigh response:' + data);
-            callback(undefined);
+            callback("IPFS error");
             return;
         }
-        callback(data);
+        callback(null, data.message);
     });
 }
 
