@@ -47,7 +47,7 @@ router.get('/', function (req, res, theNext) {
         },
         function (next) {
             console.log('chain get height started');
-            ipfs.getHeight(function (err, block) {
+            ipfs.getHeight("btc", function (err, block) {
                 processRpcResponse(err, block, function (height) {
                     model.chain.height = height;
                 });
