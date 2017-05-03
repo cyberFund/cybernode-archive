@@ -26,29 +26,29 @@ async.waterfall([
             callback(err, connection);
         });
     },
-    function createTable(connection, callback) {
-        //Create the table if needed.
-        r.tableList().contains('block').do(function (containsTable) {
-            return r.branch(
-                containsTable,
-                {created: 0},
-                r.tableCreate('block')
-            );
-        }).run(connection, function (err) {
-            callback(err, connection);
-        });
+    function createTable1(connection, callback) {
+        createTable('block', connection, callback);
+    },
+    function createTable2(connection, callback) {
+        createTable('tx', connection, callback);
     },
     function createIndex1(connection, callback) {
-        createIndex('createdAt',connection, callback);
+        createIndex('block', 'createdAt',connection, callback);
     },
     function waitForIndex1(connection, callback) {
-        waitForIndex('createdAt',connection, callback);
+        waitForIndex('block', 'createdAt',connection, callback);
     },
     function createIndex2(connection, callback) {
-        createIndex('height',connection, callback);
+        createIndex('block', 'height',connection, callback);
     },
     function waitForIndex2(connection, callback) {
-        waitForIndex('height',connection, callback);
+        waitForIndex('block', 'height',connection, callback);
+    },
+    function createIndex3(connection, callback) {
+        createIndex('tx', 'createdAt',connection, callback);
+    },
+    function waitForIndex3(connection, callback) {
+        waitForIndex('tx', 'createdAt',connection, callback);
     }
 ], function (err, connection) {
     if (err) {
@@ -62,22 +62,34 @@ async.waterfall([
 
 });
 
-function createIndex(indexName, connection, callback) {
-    //Create the index if needed.
-    r.table('block').indexList().contains(indexName).do(function (hasIndex) {
+function createTable(tableName, connection, callback) {
+    r.tableList().contains(tableName).do(function (containsTable) {
         return r.branch(
-            hasIndex,
+            containsTable,
             {created: 0},
-            r.table('block').indexCreate(indexName)
+            r.tableCreate(tableName)
         );
     }).run(connection, function (err) {
         callback(err, connection);
     });
 }
 
-function waitForIndex(indexName, connection, callback) {
+function createIndex(tableName, indexName, connection, callback) {
+    //Create the index if needed.
+    r.table(tableName).indexList().contains(indexName).do(function (hasIndex) {
+        return r.branch(
+            hasIndex,
+            {created: 0},
+            r.table(tableName).indexCreate(indexName)
+        );
+    }).run(connection, function (err) {
+        callback(err, connection);
+    });
+}
+
+function waitForIndex(tableName, indexName, connection, callback) {
     //Wait for the index to be ready.
-    r.table('block').indexWait(indexName).run(connection, function (err, result) {
+    r.table(tableName).indexWait(indexName).run(connection, function (err, result) {
         callback(err, connection);
     });
 }
@@ -89,37 +101,86 @@ function startProcessing(connection) {
     rConnection = connection;
     r.table('block').max('height').run(rConnection, function (err, result) {
         if (err) {
-            getBlock(0);
+            getAndPut(0, getAndPutNext);
             return;
         }
-        getBlock(result.height + 1);
+        getAndPut(result.height + 1, getAndPutNext);
     });
 
 }
 
 
-function getBlock(number) {
-    store.call('getBlockByHeight', [number, BTC], function (err, result) {
-        if (!result || result.length == 0) {
+function getAndPut(height, callback) {
+    getBlock(height, function (block) {
+        async.each(block.tx,
+            function (txid, next) {
+                if (txid == "4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b") {
+                    next();
+                }
+                getTx(txid, function (tx) {
+                    insertTx(tx, next);
+                });
+            },
+            function (txErr) {
+                if (txErr) {
+                    callback(txErr);
+                    return;
+                }
+                insertBlock(block, function (err) {
+                    callback(err, height);
+                });
+
+            });
+    });
+}
+
+function getAndPutNext(err, height) {
+    if (err) {
+        console.error(err);
+        return;
+    }
+    getAndPut(height + 1, getAndPutNext)
+}
+
+
+function getBlock(number, callback) {
+    store.call('getBlockByHeight', [number, BTC], function (err, block) {
+        if (!block) {
             setTimeout(function () {
-                getBlock(number);
+                getBlock(number, callback);
             }, DATA_REQUEST_DELAY);
             return;
         }
-        result[0].height = number;
-        result[0].createdAt = r.now();
-        insertBlock(result[0])
+        block.height = number;
+        block.createdAt = r.now();
+        callback(block)
 
     });
 
 }
 
-function insertBlock(block) {
-    r.table('block').insert(block, {returnChanges: true}).run(rConnection, function (err, result) {
-        if (err) {
-            console.log('Error: ' + err);
+
+function getTx(txid, callback) {
+    store.call('getTxByTxid', [txid, BTC], function (err, tx) {
+        if (!tx) {
+            setTimeout(function () {
+                getTx(txid, callback);
+            }, DATA_REQUEST_DELAY);
             return;
         }
-        getBlock(block.height + 1);
+        tx.createdAt = r.now();
+        callback(tx)
+
     });
+
 }
+
+function insertBlock(block, callback) {
+    r.table('block').insert(block, {returnChanges: true}).run(rConnection, callback);
+}
+
+
+function insertTx(tx, callback) {
+    r.table('tx').insert(tx, {returnChanges: true}).run(rConnection, callback);
+}
+

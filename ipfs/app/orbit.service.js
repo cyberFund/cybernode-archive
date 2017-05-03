@@ -90,7 +90,7 @@ function getBlockByHeight(height, system, callback) {
     var result = docstore.query(function (e) {
         return (e.system == system && e.height == height);
     });
-    callback(null, result);
+    callback(null, result.length > 0 ? result[0] : null);
 }
 
 function getBlockByHash(hash, system, callback) {

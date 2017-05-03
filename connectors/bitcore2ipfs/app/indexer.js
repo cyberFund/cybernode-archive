@@ -43,11 +43,11 @@ function index(height, callback) {
             }, function() {
                 ipfs.insertBlock(block, function (hash) {
                     //FIXME
-                    next(null, hash);
+                    next(null, block, hash);
                 });
             });
         }
-    ], function (err, hash) {
+    ], function (err, block, hash) {
         if (err) {
             if (!err.finished) {
                 console.error("index: " + err);
@@ -57,7 +57,7 @@ function index(height, callback) {
             }
             return;
         }
-        console.log("index: " + hash.message);
+        console.log("index: (" + height + "," + block.hash + ") -> " + hash.message);
         callback(true);
     });
 }
@@ -104,7 +104,7 @@ function indexTx(txid, callback) {
             }
             return;
         }
-        console.log("indexTx: " + hash.message);
+        console.log("indexTx: " + txid + " -> " + hash.message);
         callback(true);
     });
 }
