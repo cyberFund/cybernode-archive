@@ -18,7 +18,7 @@ orbit.prepareDatabase(function() {
     }
 
     function insertTx(args, opt, callback) {
-        orbit.insertBlock(args[0], args[1], callback);
+        orbit.insertTx(args[0], args[1], callback);
     }
 
     function getHeight(args, opt, callback) {
