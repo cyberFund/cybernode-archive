@@ -2,3 +2,7 @@ language: generic
 
 services:
   - docker
+
+script:
+  - cd images/fullnode
+  - ./build.sh
