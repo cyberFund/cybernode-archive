@@ -7,7 +7,7 @@ set -e
 
 BUILDDIR="$PWD"/btcd
 cd $BUILDDIR
-docker build -t fullnode-btcd-build -f Dockerfile . | tee build.log
+docker build -t fullnode-btcd-build -f Dockerfile-build . | tee build.log
 docker run --rm -v "$PWD"/bin:/build fullnode-btcd-build | tee build-run.log
 echo ... built btcd binaries:
 ls -la $BUILDDIR/bin
