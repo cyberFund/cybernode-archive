@@ -1,6 +1,6 @@
-# Cybernode
+[![Travis branch](https://img.shields.io/travis/cyberFund/cybernode/master.svg)](https://travis-ci.org/cyberFund/cybernode)
 
-Polyblockchain full node
+**Cybernode** - polyblockchain full node (cluster with full nodes for multiple blockchains)
 
 #### Architecture
 
