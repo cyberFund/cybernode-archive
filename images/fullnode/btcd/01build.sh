@@ -11,6 +11,7 @@ cd $GOPATH/src/github.com/btcsuite/btcd
 
 echo --- fetch dependencies into vendor/ ---
 glide install
+ls -la $GOPATH/bin
 
 echo --- build all tools found in cmd/ to $GOPATH/bin ---
 go install . ./cmd/...

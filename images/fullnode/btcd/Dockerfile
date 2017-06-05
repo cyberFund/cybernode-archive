@@ -6,6 +6,11 @@ FROM golang:1.8
 # GOROOT: /usr/local/go
 # GOPATH: /go
 
+# build time commands
 COPY 01build.sh .
-
 RUN ./01build.sh
+
+VOLUME /build
+
+# run time commands
+CMD rm $GOPATH/bin/glide && cp --verbose $GOPATH/bin/* /build
