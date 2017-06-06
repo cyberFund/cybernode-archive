@@ -12,5 +12,5 @@ docker run --rm -v "$PWD"/bin:/build fullnode-btcd-build | tee build-run.log
 echo ... built btcd binaries:
 ls -la $BUILDDIR/bin
 echo ... creating fullnode-btcd image
-# TBD
+docker build -t fullnode-btcd . | tee fullnode-build.log
 cd -

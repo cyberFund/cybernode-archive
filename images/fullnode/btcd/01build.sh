@@ -14,5 +14,9 @@ glide install
 ls -la $GOPATH/bin
 
 echo --- build all tools found in cmd/ to $GOPATH/bin ---
-go install . ./cmd/...
+# static compile to work on any Linux
+CGO_ENABLED=0 go install . ./cmd/...
+# record version
+git rev-parse HEAD > $GOPATH/bin/VERSION
+$GOPATH/bin
 ls -la $GOPATH/bin

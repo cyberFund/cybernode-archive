@@ -50,6 +50,10 @@ be executed with `docker run`. CMD entry in
 `/build` VOLUME, which can be mounted from host to retrieve
 binaries.
 
+A typical command run by `build image`:
+
+    CMD cp --verbose $GOPATH/bin/* /build
+
 
 ##### Run images
 
