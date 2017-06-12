@@ -19,5 +19,9 @@ echo "source /usr/share/bash-completion/bash_completion" >> .bashrc
 
 
 echo [x] Creating Cyber
-# https://en.wikipedia.org/wiki/Gecos_field
-adduser cyber --disabled-password --gecos ""
+if id "cyber" >/dev/null 2>&1; then
+  echo 'cyber' user already exists
+else
+  # https://en.wikipedia.org/wiki/Gecos_field
+  adduser cyber --disabled-password --gecos ""
+fi

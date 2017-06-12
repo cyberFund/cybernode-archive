@@ -18,5 +18,4 @@ echo --- build all tools found in cmd/ to $GOPATH/bin ---
 CGO_ENABLED=0 go install . ./cmd/...
 # record version
 git rev-parse HEAD > $GOPATH/bin/VERSION
-$GOPATH/bin
 ls -la $GOPATH/bin

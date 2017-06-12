@@ -14,9 +14,10 @@ Current build command:
 `tee` command duplicates output stream to a file. Binaries
 will be present in `bin/` directory.
 
-Run container and store blockchain in `./data` directory:
+Run container and store blockchain in `$HOME/cyberdata`
+directory:
 
-    docker run -d -v "$PWD"/data:/cyberdata fullnode-btcd
+    docker run -d -v "$HOME"/cyberdata:/cyberdata fullnode-btcd
 
 ### fullnode-btcd image layout
 
