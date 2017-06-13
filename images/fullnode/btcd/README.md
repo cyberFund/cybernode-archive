@@ -1,3 +1,12 @@
+
+### btcd configuration and docs
+
+See `btcd --help` ([online](https://godoc.org/github.com/btcsuite/btcd))
+for command line options and config, and the rest at
+https://github.com/btcsuite/btcd/tree/master/docs#table-of-contents
+
+### Building image
+
 `btcd` is written in Go, but uses https://glide.sh/ to pin
 dependencies. See [glide.lock] and [glide.yaml] for config.
 
@@ -14,10 +23,18 @@ Current build command:
 `tee` command duplicates output stream to a file. Binaries
 will be present in `bin/` directory.
 
+### Running image
+
 Run container and store blockchain in `$HOME/cyberdata`
 directory:
 
     docker run -d -v "$HOME"/cyberdata:/cyberdata fullnode-btcd
+
+To make image visible at https://bitnodes.21.co/ make sure
+port 8333 is accessible from outside. To make it accessible
+from host machine, publish it:
+
+    docker run -d -v -p 8333:8333 "$HOME"/cyberdata:/cyberdata fullnode-btcd
 
 ### fullnode-btcd image layout
 
