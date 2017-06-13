@@ -15,3 +15,13 @@ updates and Docker.
     echo >> .bashrc
     echo "source /usr/share/bash-completion/bash_completion" >> .bashrc
 
+Cybernode main user is called `cyber` and its home contains
+base mount point for data gathered from various containers.
+For example, data from `fullnode-btcd` container should be
+mounted at `/home/cyber/cyberdata/fullnode-btcd`.
+
+    # create `cyber` user
+    adduser cyber --disabled-password --gecos ""
+
+You can read about GECOS fiels [here](https://en.wikipedia.org/wiki/Gecos_field)
+if you want.
