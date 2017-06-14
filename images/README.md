@@ -63,3 +63,45 @@ application binaries in `/cyberapp` and stores data
 can be mounted as external storage in uniform way accross
 containers.
 
+To run docker images on cybernode, make sure you're present
+in `docker` group (add yourself with `adduser $USER docker`
+command). Then run (example for btcd fullnode):
+
+    $ docker run -d -u $(id -u cyber) -p 8333:8333 --name btcd -v /home/cyber/cyberdata:/cyberdata fullnode-btcd
+
+You should see the image in `docker ps` output. You can also
+check it with `docker logs btcd`. Parameters explained:
+
+    -d                  - run as daemon 
+    -u $(id -u cyber)   - run container under user `cyber`, param needs uid
+    -p 8333:8333        - host:container - expose port 8333 as 8333 from host
+    --name btcd         - just convenient name to find running container
+    -v /aaa:/bbb        - mount /aaa in host as /bbb in container
+
+To get more info about `-u $(id -u cyber)` read Docker
+security chapter below.
+
+### Docker security
+
+By default, Docker containers are run as `root`:
+
+    $ ps faux
+    root ...  \_ containerd -l unix:///var/run/docker/libco
+    root ...     \_ containerd-shim 3cd12f4b19d2615f06db041
+    root ...         \_ /cyberapp/btcd --datadir=/cyberdata 
+
+
+This doesn't mean container app has access to host system,
+but bugs in Docker code or in container isolation on kernel
+level may make it possible. As a workaround, it is possible
+to specify user for containers process in `Dockerfile`:
+
+    USER cyber
+
+or run `docker` with explicit user command:
+
+    docker run -d -u $(id -u cyber) <image>
+
+`-u` or `--user` options doesn't accept user name and
+requires numeric UID passed as parameter, for details, see
+https://github.com/moby/moby/issues/22323#issuecomment-215449380
