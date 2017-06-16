@@ -5,10 +5,10 @@
 #### Architecture
 
 ![Architecture](https://rawgit.com/cyberFund/cybernode/master/cybernode_01.svg)
-![architecture-description](https://github.com/cyberFund/cybernode/blob/13-cybernode-description/architecture-description.png)
-![kenig-architecture](https://github.com/cyberFund/cybernode/blob/13-cybernode-description/kenig-architecture.png)
-![state-monitor](https://github.com/cyberFund/cybernode/blob/13-cybernode-description/state-monitor.png)
-![state-monitor-design](https://github.com/cyberFund/cybernode/blob/13-cybernode-description/state-monitor-design.png)
+![architecture-description](https://github.com/cyberFund/cybernode/raw/master/architecture-description.png)
+![kenig-architecture](https://github.com/cyberFund/cybernode/raw/master/kenig-architecture.png)
+![state-monitor](https://github.com/cyberFund/cybernode/raw/master/state-monitor-design.png)
+![state-monitor-design](https://github.com/cyberFund/cybernode/raw/master/state-monitor.png)
 
 #### Cyberchain comment data structure:
 
@@ -38,10 +38,41 @@
 
 We are collect blockchain systems an put them to docker containers:
 1. All containers build with the same standard and specification
-  1. Have same basic layer
-  2. Conversation about ports of containers
-  3. Custom general tweaks on a top of base layer for performance of container
-  4. Prepared user control for security
-  5. Conversation about side store of blockchain data
-2. We are publish our containers in dockerhub.
-3. We are controlling new tested releases of systems and updating our containers
+2. Have same basic layer
+3. Conversation about ports of containers
+4. Custom general tweaks on a top of base layer for performance of container
+5. Prepared user control for security
+6. Conversation about side store of blockchain data
+7. We are publish our containers in dockerhub.
+8. We are controlling new tested releases of systems and updating our containers
+
+#### Flow of integrations by prioritized groups (dockerization and indexing too)
+
+```
+Bitcoin <-
+Litecoin
+Dash
+```
+
+```
+Ethereum (ERC20+) <-
+Ethereum Classic
+```
+
+```
+BitShares <-
+Steem
+Golos
+```
+
+```
+Ripple (client) <-
+Stellar
+```
+
+```
+NEM <-
+NXT
+Monero
+DAGs (!)
+```
