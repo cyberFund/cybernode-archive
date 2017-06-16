@@ -3,9 +3,12 @@
 # fail on error
 set -e
 
+# path to script directory
+DIR=$(dirname "$0")
+
 # building Bitcoin fullnode based on btcd
 
-BUILDDIR="$PWD"/btcd
+BUILDDIR="$DIR"/btcd
 cd $BUILDDIR
 docker build -t fullnode-btcd-build -f Dockerfile-build . | tee build.log
 docker run --rm -v "$PWD"/bin:/build fullnode-btcd-build | tee build-run.log
