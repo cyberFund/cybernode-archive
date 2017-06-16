@@ -76,3 +76,27 @@ NXT
 Monero
 DAGs (!)
 ```
+
+### cyber•Fund pricefeeds methodology
+
+Here we describe our vision to market research.
+
+#### Markets price feeds
+
+##### VWAP - Volume Weighted Average Price
+
+##### BVWAP - Block Volume Weighted Average Price
+
+1. Core token
+
+2. UIA
+
+##### OBWAP - Order Book Weighted Averag Price
+
+1. Rank (check check bitcoinity.org)
+
+#### ICO price feeds
+
+###### CFP - Fixed Price
+
+###### CFS - Fixed Supply
