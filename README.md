@@ -19,7 +19,7 @@
     parent_permlink (main tag) – cryptocurrency code
     body – block data including transactions hash list in JSON format
     json_metadata – JSON object:
-        tags – all tags we need
+      tags – all tags we need
 	    height – bock height
 	    data_type = ‘block’
 
@@ -27,9 +27,21 @@
 
     title – tx id (or hash depends on cryptocurrency)
     permlink* – tx id (or hash depends on cryptocurrency)
-    parent_permlink (main tag) – cryptocurrency code 
+    parent_permlink (main tag) – cryptocurrency code
     body – tx data in JSON format
     json_metadata – JSON object:
-        tags – all tags we need 
+        tags – all tags we need
         height – bock height
         data_type - ’tx’
+
+#### Blockchain systems in containers
+
+We are collect blockchain systems an put them to docker containers:
+1. All containers build with the same standard and specification
+  1. Have same basic layer
+  2. Conversation about ports of containers
+  3. Custom general tweaks on a top of base layer for performance of container
+  4. Prepared user control for security
+  5. Conversation about side store of blockchain data
+2. We are publish our containers in dockerhub.
+3. We are controlling new tested releases of systems and updating our containers
