@@ -6,3 +6,5 @@ services:
 script:
   - cd images/fullnode
   - ./build.sh
+  - cd images/xchange-crawler
+  - ./build-image.sh
