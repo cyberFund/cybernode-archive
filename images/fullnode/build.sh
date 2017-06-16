@@ -4,21 +4,20 @@
 set -e
 
 # path to script directory
-DIR=$(dirname "$0")
+DIR=$(dirname $(readlink -f "$0"))
 
 # building Bitcoin fullnode based on btcd
 
 BUILDDIR="$DIR"/btcd
-cd $BUILDDIR
+BINDIR="$DIR"/btcd/bin
 
 echo "Build Dir:   $BUILDDIR"
-echo "Current Dir: $PWD"
 
+cd $BUILDDIR
 docker build -t fullnode-btcd-build -f Dockerfile-build . | tee build.log
-docker run --rm -v "$PWD"/bin:/build fullnode-btcd-build | tee build-run.log
+docker run --rm -v $BINDIR:/build fullnode-btcd-build | tee build-run.log
 echo ... built btcd binaries:
-ls -la $BUILDDIR/bin
-ls -la $BUILDDIR
+ls -la $BINDIR
 echo ... creating fullnode-btcd image
 docker build -t fullnode-btcd . | tee fullnode-build.log
 cd -
