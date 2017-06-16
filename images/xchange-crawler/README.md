@@ -18,3 +18,19 @@ This will create two images - `xchange-crawler-build` with
 tools and build artifacts and `xchange-crawler` with
 actual binaries, which are also extracted to `bin/`
 directory in current dir for inspection.
+
+### Running image
+
+Running `crawler` with default settings:
+
+    docker run -d -u $(id -u cyber) --name crawler xchange-crawler
+
+Running it with custom `crawler.properties` config that is
+present in current directory:
+
+    docker run -d -u $(id -u cyber) --name crawler -v $PWD/crawler.properties:/cyberapp/crawler.properties xchange-crawler
+
+You can see default config in [crawler.properties.default]
+in this directory.
+
+See [fullimage-btcd] for explanation of parameters.
