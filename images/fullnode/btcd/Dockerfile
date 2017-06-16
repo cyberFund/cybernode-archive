@@ -1,6 +1,6 @@
 FROM scratch
 
-ADD bin/btcd /cyberapp/btcd
+ADD bin/* /cyberapp/
 VOLUME /cyberdata
 
 # https://github.com/btcsuite/btcd/blob/master/docs/default_ports.md

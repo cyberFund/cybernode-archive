@@ -6,7 +6,7 @@ set -e
 # path to script directory
 DIR=$(dirname $(readlink -f "$0"))
 
-# building Bitcoin fullnode based on btcd
+echo [build] ---- building Bitcoin fullnode based on btcd ----
 
 BUILDDIR="$DIR"/btcd
 BINDIR="$DIR"/btcd/bin
