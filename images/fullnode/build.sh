@@ -10,10 +10,15 @@ DIR=$(dirname "$0")
 
 BUILDDIR="$DIR"/btcd
 cd $BUILDDIR
+
+echo "Build Dir:   $BUILDDIR"
+echo "Current Dir: $PWD"
+
 docker build -t fullnode-btcd-build -f Dockerfile-build . | tee build.log
 docker run --rm -v "$PWD"/bin:/build fullnode-btcd-build | tee build-run.log
 echo ... built btcd binaries:
 ls -la $BUILDDIR/bin
+ls -la $BUILDDIR
 echo ... creating fullnode-btcd image
 docker build -t fullnode-btcd . | tee fullnode-build.log
 cd -
