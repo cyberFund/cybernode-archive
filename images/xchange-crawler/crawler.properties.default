@@ -1,0 +1,27 @@
+rest.port=8888
+
+rethink.save=true
+rethink.db=crawler
+rethink.host=localhost
+rethink.port=28015
+rethink.authKey=verysecret
+
+elastic.save=false
+elastic.cluster.name=elasticsearch
+elastic.node.host=localhost
+
+ignore.symbols=TRL, GHS, GHC, MYR, XAU, BOB, CRC, XBC, XXX, CYP
+#TRL = not Turkish Lira but TrollCoin
+#GHS = not Ghanaian Cedi but Giga Hash per Second
+#GHC = not Ghanaian Cedi but GamerholicCoin
+#MYR = not Malaysian Ringgit but MyriadCoin
+#XAU = not Gold but Xaurum
+#BOB = not Bolivian Boliviano but DobbsCoin
+#CRC = not Costa Rican Colón but CraftCoin
+#XBC = not European Unit of Account but Bitcoin Plus
+#XXX = not Unknown Currency but XXXCoin
+#CYP = not Cypriot Pound but Cypher
+
+rename.symbols={"RUR":"Russian Ruble"}
+#format= {"symbol1":"name1","symbol2","name2",...,"symbolN","nameN"}
+
