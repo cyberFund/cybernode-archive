@@ -16,6 +16,6 @@ docker build --no-cache -t ${IMAGE}-build -f Dockerfile-build . | tee build.log
 docker run --rm -v "$PWD"/bin:/build "${IMAGE}-build" | tee build-run.log
 ls -la "$PWD"/bin
 echo ... creating $IMAGE
-VERSION=`cat $BINDIR/VERSION`
+VERSION=`cat $PWD/bin/VERSION`
 docker build -t $IMAGE --label version="$VERSION" . | tee build-$IMAGE.log
 cd -

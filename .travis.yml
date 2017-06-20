@@ -5,4 +5,4 @@ services:
 
 script:
   - ./images/build-fullnode-btcd.sh
-  - ./images/xchange-crawler/build-image.sh
+  - ./images/build-xchange-crawler.sh
