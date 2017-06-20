@@ -14,7 +14,7 @@ BINDIR=$BUILDIR/bin
 echo "Build Dir:   $BUILDDIR"
 
 cd $BUILDDIR
-docker build -t fullnode-btcd-build -f Dockerfile-build . | tee build.log
+docker build --no-cache -t fullnode-btcd-build -f Dockerfile-build . | tee build.log
 docker run --rm -v $BINDIR:/build fullnode-btcd-build | tee build-run.log
 echo ... built btcd binaries:
 ls -la $BINDIR
