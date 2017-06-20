@@ -19,5 +19,6 @@ docker run --rm -v $BINDIR:/build fullnode-btcd-build | tee build-run.log
 echo ... built btcd binaries:
 ls -la $BINDIR
 echo ... creating fullnode-btcd image
-docker build -t fullnode-btcd . | tee fullnode-build.log
+VERSION=`cat $BINDIR/VERSION`
+docker build -t fullnode-btcd --label version="$VERSION" . | tee fullnode-build.log
 cd -
