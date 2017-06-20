@@ -3,14 +3,15 @@
 # fail on error
 set -e
 
-# path to script directory
+IMAGE=xchange-crawler
+
+# absolute path to script's directory
 DIR=$(dirname $(readlink -f "$0"))
 
-echo [build] ---- building xchange-crawler image ----
+echo [build] ---- building $IMAGE image ----
 
-cd $DIR
+cd $DIR/$IMAGE
 
-IMAGE=xchange-crawler
 docker build -t ${IMAGE}-build -f Dockerfile-build . | tee build.log
 docker run --rm -v "$PWD"/bin:/build "${IMAGE}-build" | tee build-run.log
 ls -la "$PWD"/bin
