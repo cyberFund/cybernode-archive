@@ -1,3 +1,8 @@
+### fullnode-btcd image layout
+
+* `/cyberapp/btcd`     - main process
+* `/cyberapp/VERSION`  - revision in btcd repository
+* `/cyberdata`         - volume with blockchain data
 
 ### btcd configuration and docs
 
@@ -35,12 +40,6 @@ port 8333 is accessible from outside. To make it accessible
 from host machine, publish it:
 
     docker run -d -v -p 8333:8333 "$HOME"/cyberdata:/cyberdata fullnode-btcd
-
-### fullnode-btcd image layout
-
-* `/cyberapp/btcd`     - main process
-* `/cyberapp/VERSION`  - revision in btcd repository
-* `/cyberdata`         - volume with blockchain data
 
 [glide.lock]: https://github.com/btcsuite/btcd/blob/master/glide.lock
 [glide.yaml]: https://github.com/btcsuite/btcd/blob/master/glide.yaml
