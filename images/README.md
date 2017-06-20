@@ -95,6 +95,7 @@ security chapter below.
 2. Create the same, test that it works
 3. Add build script to `.travis.yml`
 4. Document the component in `install/` docs
+5. Write `run-*.sh` script
 
 ### Docker security
 
