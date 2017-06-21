@@ -12,6 +12,4 @@ echo ... starting crawler ...
 IMAGE=xchange-crawler
 NAME=crawler
 docker inspect $IMAGE | grep "LABEL version"
-
-echo ... xchange-crawler config is not ready yet...
-echo docker run -d -u $(id -u cyber) --name $NAME $IMAGE
+docker run -d -u $(id -u cyber) --name $NAME $IMAGE
