@@ -4,5 +4,5 @@ services:
   - docker
 
 script:
-  - ./images/fullnode/build.sh
-  - ./images/xchange-crawler/build-image.sh
+  - ./images/build-fullnode-btcd.sh
+  - ./images/build-xchange-crawler.sh

@@ -1,4 +1,12 @@
-*Sources for building `cybernode` images.*
+*Automation for `cybernode` images*
+
+### TL;DR
+
+Run `./build-*.sh` scripts. **Build images** are not
+pushed. Binaries are extracted to `bin/` subdir of image
+sources.
+
+### Intro
 
 `cybernode` is a cluster of services. Every service runs in
 container to simplify administration, deployment and
@@ -80,6 +88,14 @@ check it with `docker logs btcd`. Parameters explained:
 
 To get more info about `-u $(id -u cyber)` read Docker
 security chapter below.
+
+### Adding new image
+
+1. Study some existing image (`fullnode-btcd` is okay)
+2. Create the same, test that it works
+3. Add build script to `.travis.yml`
+4. Document the component in `install/` docs
+5. Write `run-*.sh` script
 
 ### Docker security
 

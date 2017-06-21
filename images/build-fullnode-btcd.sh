@@ -8,16 +8,17 @@ DIR=$(dirname $(readlink -f "$0"))
 
 echo [build] ---- building Bitcoin fullnode based on btcd ----
 
-BUILDDIR="$DIR"/btcd
-BINDIR="$DIR"/btcd/bin
+BUILDDIR="$DIR"/fullnode/btcd
+BINDIR=$BUILDIR/bin
 
 echo "Build Dir:   $BUILDDIR"
 
 cd $BUILDDIR
-docker build -t fullnode-btcd-build -f Dockerfile-build . | tee build.log
+docker build --no-cache -t fullnode-btcd-build -f Dockerfile-build . | tee build.log
 docker run --rm -v $BINDIR:/build fullnode-btcd-build | tee build-run.log
 echo ... built btcd binaries:
 ls -la $BINDIR
 echo ... creating fullnode-btcd image
-docker build -t fullnode-btcd . | tee fullnode-build.log
+VERSION=`cat $BINDIR/VERSION`
+docker build -t fullnode-btcd --label version="$VERSION" . | tee fullnode-build.log
 cd -
