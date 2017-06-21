@@ -25,12 +25,15 @@ Running `crawler` with default settings:
 
     docker run -d -u $(id -u cyber) --name crawler xchange-crawler
 
-Running it with custom `crawler.properties` config that is
-present in current directory:
+Overriding configuration. Create custom 
+`crawler.properties` config in in current directory and
+run:
 
     docker run -d -u $(id -u cyber) --name crawler -v $PWD/crawler.properties:/cyberapp/crawler.properties xchange-crawler
 
-You can see default config in [crawler.properties.default]
-in this directory.
+Default config is in [crawler.properties.default] in this
+directory and params specific to cybernode are in
+[crawler.properties].
 
-See [fullimage-btcd] for explanation of parameters.
+See [../run-xchange-crawler.sh] for explanation of Docker
+parameters.
