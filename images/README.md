@@ -6,6 +6,12 @@ Run `./build-*.sh` scripts. **Build images** are not
 pushed. Binaries are extracted to `bin/` subdir of image
 sources.
 
+### Common operations
+
+Check version of dockerized software (`btcd` for example):
+
+    docker inspect --format='{{.Config.Labels.version}}' btcd
+
 ### Intro
 
 `cybernode` is a cluster of services. Every service runs in

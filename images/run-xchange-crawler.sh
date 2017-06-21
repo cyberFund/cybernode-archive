@@ -17,5 +17,7 @@ echo ... starting crawler ...
 
 IMAGE=xchange-crawler
 NAME=crawler
+VERSION=`docker inspect --format='{{.Config.Labels.version}}' $IMAGE`
+echo Running $NAME $VERSION from $IMAGE
 docker inspect $IMAGE | grep "LABEL version"
 docker run -d -u $(id -u cyber) --name $NAME $IMAGE
