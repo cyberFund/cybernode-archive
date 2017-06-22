@@ -24,6 +24,6 @@ echo Running $NAME $VERSION from $IMAGE
 IMAGES=$(dirname $(readlink -f "$0"))
 cp $IMAGES/xchange-crawler/crawler.properties .
 sed --in-place "s/rethink.host=localhost/rethink.host=$RETHINK_IP/" $PWD/crawler.properties
-HACK=-v $PWD/crawler.properties:/cyberapp/crawler.properties
+HACK="-v $PWD/crawler.properties:/cyberapp/crawler.properties"
 
 docker run -d -u $(id -u cyber) $HACK --name $NAME $IMAGE
