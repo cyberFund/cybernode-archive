@@ -1,6 +1,7 @@
 IMAGE=fullnode-btcd
 NAME=btcd
-docker inspect $IMAGE | grep "LABEL version"
+VERSION=`docker inspect --format='{{.Config.Labels.version}}' $IMAGE`
+echo Running $NAME $VERSION from $IMAGE
 docker run -d -u $(id -u cyber) -p 8333:8333 --name $NAME -v /home/cyber/cyberdata/$NAME:/cyberdata $IMAGE
 #    -d                  - run as daemon 
 #    -u $(id -u cyber)   - run container under user `cyber`, param needs uid

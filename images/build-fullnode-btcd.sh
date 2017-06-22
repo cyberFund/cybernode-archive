@@ -9,7 +9,7 @@ DIR=$(dirname $(readlink -f "$0"))
 echo [build] ---- building Bitcoin fullnode based on btcd ----
 
 BUILDDIR="$DIR"/fullnode/btcd
-BINDIR=$BUILDIR/bin
+BINDIR=$BUILDDIR/bin
 
 echo "Build Dir:   $BUILDDIR"
 
