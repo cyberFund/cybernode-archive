@@ -39,7 +39,12 @@ else
 fi
 
 
-# swappiness
+echo [x] Start using swap when memory usage is near 90%
+cat /proc/sys/vm/swappiness
+echo "vm.swappiness = 10" > /etc/sysctl.d/60-cybernode-swappiness.conf
+sysctl -p /etc/sysctl.d/60-cybernode-swappiness.conf
+cat /proc/sys/vm/swappiness
+
 
 # disk mounting
 
