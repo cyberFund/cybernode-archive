@@ -46,5 +46,7 @@ sysctl -p /etc/sysctl.d/60-cybernode-swappiness.conf
 cat /proc/sys/vm/swappiness
 
 
-# disk mounting
+# mount separate disk for cyberdata
+#blkid
+#echo "UUID=f9698264-4655-4998-a045-fb2392f0976c  /home/cyber/cyberdata  ext4  defaults  0  2" > /etc/fstab
 
