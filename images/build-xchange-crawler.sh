@@ -12,10 +12,10 @@ echo [build] ---- building $IMAGE image ----
 
 cd $DIR/$IMAGE
 
-docker build --no-cache -t ${IMAGE}-build -f Dockerfile-build . | tee build.log
-docker run --rm -v "$PWD"/bin:/build "${IMAGE}-build" | tee build-run.log
+docker build --no-cache -t ${IMAGE}-build -f Dockerfile-build . | tee buildimage.log
+docker run --rm -v "$PWD"/bin:/build "${IMAGE}-build" | tee buildimage-run.log
 ls -la "$PWD"/bin
 echo ... creating $IMAGE
 VERSION=`cat $PWD/bin/VERSION`
-docker build -t $IMAGE --label version="$VERSION" . | tee build-$IMAGE.log
+docker build --no-cache -t $IMAGE --label version="$VERSION" . | tee buildfinal.log
 cd -

@@ -14,11 +14,11 @@ BINDIR=$BUILDDIR/bin
 echo "Build Dir:   $BUILDDIR"
 
 cd $BUILDDIR
-docker build --no-cache -t fullnode-btcd-build -f Dockerfile-build . | tee build.log
-docker run --rm -v $BINDIR:/build fullnode-btcd-build | tee build-run.log
+docker build --no-cache -t fullnode-btcd-build -f Dockerfile-build . | tee buildimage.log
+docker run --rm -v $BINDIR:/build fullnode-btcd-build | tee buildimage-run.log
 echo ... built btcd binaries:
 ls -la $BINDIR
 echo ... creating fullnode-btcd image
 VERSION=`cat $BINDIR/VERSION`
-docker build -t fullnode-btcd --label version="$VERSION" . | tee fullnode-build.log
+docker build --no-cache -t fullnode-btcd --label version="$VERSION" . | tee buildfinal.log
 cd -
