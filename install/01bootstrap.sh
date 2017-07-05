@@ -7,9 +7,9 @@
 # settings if run twice.
 
 
-echo [x] Enable automatic security updates
+echo [x] Enable automatic security updates and /etc snapshots
 apt-get -y update
-apt-get -y install unattended-upgrades
+apt-get -y install unattended-upgrades etckeeper
 unattended-upgrades -v
 # check /var/log/unattended-upgrades/unattended-upgrades.log
 
@@ -48,5 +48,6 @@ cat /proc/sys/vm/swappiness
 
 # mount separate disk for cyberdata
 #blkid
-#echo "UUID=f9698264-4655-4998-a045-fb2392f0976c  /home/cyber/cyberdata  ext4  defaults  0  2" > /etc/fstab
+#echo "\n# separate disk for cyberdata" >> /etc/fstab
+#echo "UUID=f9698264-4655-4998-a045-fb2392f0976c  /home/cyber/cyberdata  ext4  defaults  0  2" >> /etc/fstab
 
