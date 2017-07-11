@@ -2,6 +2,8 @@
 
 # fail on error
 set -e
+# set exit code to non-0 if any piped command returns error
+set -o pipefail
 
 IMAGE=fullnode-parity
 
