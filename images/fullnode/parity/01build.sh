@@ -1,3 +1,4 @@
+#!/bin/bash
 
 echo --- checking build tools ---
 rustc --version

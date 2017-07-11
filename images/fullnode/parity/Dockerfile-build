@@ -6,7 +6,7 @@ RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 ENV PATH $PATH:/root/.cargo/bin
 
 COPY 01build.sh .
-RUN chmod +x 01build.sh && ./01build.sh
+RUN bash 01build.sh
 
 VOLUME /build
 
