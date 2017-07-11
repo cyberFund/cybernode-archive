@@ -5,6 +5,11 @@ FROM buildpack-deps:jessie-scm
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 ENV PATH $PATH:/root/.cargo/bin
 
+# install Parity build dependencies
+# https://github.com/paritytech/parity#build-dependencies
+RUN apt-get -y update && apt-get -y install gcc g++
+
+# build Parity from source
 COPY 01build.sh .
 RUN bash 01build.sh
 
