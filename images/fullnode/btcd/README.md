@@ -7,7 +7,8 @@
 ### btcd configuration and docs
 
 See `btcd --help` ([online](https://godoc.org/github.com/btcsuite/btcd))
-for command line options and config, and the rest at
+and [sample-btcd.conf](https://github.com/btcsuite/btcd/blob/master/sample-btcd.conf)
+for configuration description and the rest of the docs at
 https://github.com/btcsuite/btcd/tree/master/docs#table-of-contents
 
 ### Building image
