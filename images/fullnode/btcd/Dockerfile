@@ -4,6 +4,9 @@ ADD bin/* /cyberapp/
 VOLUME /cyberdata
 
 # https://github.com/btcsuite/btcd/blob/master/docs/default_ports.md
+# Bitcoin P2P
 EXPOSE 8333
+# JSON-RPC + WebSockets
+EXPOSE 8334
 
 CMD ["/cyberapp/btcd", "--datadir=/cyberdata"]
