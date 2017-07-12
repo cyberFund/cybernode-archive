@@ -5,7 +5,7 @@ VERSION=`docker inspect --format='{{.Config.Labels.version}}' $IMAGE`
 # -p 8333:8333  - host:container - expose port 8333 as 8333 from host
 #   8333 (Bitcoin P2P) is accessible from outside
 #   8334 (JSON-RPC/WS) only locally
-PORTS="-p 8333:8333 -p localhost:8334:8334"
+PORTS="-p 8333:8333 -p 127.0.0.1:8334:8334"
 
 echo ... starting $NAME $VERSION from $IMAGE
 docker run -d --restart always -u $(id -u cyber) $PORTS --name $NAME -v /home/cyber/cyberdata/$NAME:/cyberdata $IMAGE
