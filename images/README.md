@@ -97,11 +97,21 @@ security chapter below.
 
 ### Adding new image
 
-1. Study some existing image (`fullnode-btcd` is okay)
-2. Create the same, test that it works
-3. Add build script to `.travis.yml`
-4. Document the component in `install/` docs
-5. Write `run-*.sh` script
+It helps to study existing image such as `fullnode/btcd` to
+get into the process faster.
+
+1. Create directory for the image, blockchain nodes go into
+   `fullnode/` dir, images are prefixed with `fullnode`,
+   runtime containers use abbreviated names such as `btcd`.
+2. Create `Dockerfile-build` to get tools, build project
+   and extract binaries.
+3. Create `Dockerfile` with minimal footprint and default
+   settings. Binaries go into `/cyberapp`, data (if any)
+   into `/cyberdata` VOLUME.
+4. Write `build-*.sh` script for images (adapt existing),
+   add it to `.travis.yml` for continuous testing
+5. Write `run-*.sh` script, specify if it should be
+   restarted automatically, `fullnode` chains should.
 
 ### Docker security
 

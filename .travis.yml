@@ -5,4 +5,5 @@ services:
 
 script:
   - ./images/build-fullnode-btcd.sh
+  - ./images/fullnode/build-parity.sh
   - ./images/build-xchange-crawler.sh

@@ -1,4 +1,6 @@
 FROM maven:3.5-jdk-8
+# $ cat /etc/os-release
+# PRETTY_NAME="Debian GNU/Linux 8 (jessie)"
 
 # build time commands
 COPY project-build.sh .
