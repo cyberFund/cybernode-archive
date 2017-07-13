@@ -37,10 +37,21 @@ directory:
     docker run -d -v "$HOME"/cyberdata:/cyberdata fullnode-btcd
 
 To make image visible at https://bitnodes.21.co/ make sure
-port 8333 is accessible from outside. To make it accessible
-from host machine, publish it:
+port 8333 is accessible from host machine by publishing it
+for all hosts in the same network, and then make the port
+available from outside. Publishing:
 
     docker run -d -v -p 8333:8333 "$HOME"/cyberdata:/cyberdata fullnode-btcd
+
+You can pass all configuration parameters on `docker run`.
+For example, checking `btcd` version:
+
+    docker run --rm fullnode-btcd --version
+
+Checking `btcd` version from hash (we record it in label):
+
+    docker inspect -f "{{.Config.Labels.version}}" fullnode-btcd
+
 
 [glide.lock]: https://github.com/btcsuite/btcd/blob/master/glide.lock
 [glide.yaml]: https://github.com/btcsuite/btcd/blob/master/glide.yaml
