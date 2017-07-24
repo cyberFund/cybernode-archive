@@ -7,7 +7,7 @@ ENV PATH $PATH:/root/.cargo/bin
 
 # install Parity build dependencies
 # https://github.com/paritytech/parity#build-dependencies
-RUN apt-get -y update && apt-get -y install gcc g++ pkg-config libudev-dev make
+RUN apt-get -y update && apt-get -y install gcc g++ pkg-config libudev-dev make libssl-dev
 
 # build Parity from source
 COPY 01build.sh .
