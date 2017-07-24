@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# fail on error
+set -e
+
 echo --- checking build tools ---
 rustc --version
 cargo --version

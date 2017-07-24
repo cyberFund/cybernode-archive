@@ -9,9 +9,6 @@ ENV PATH $PATH:/root/.cargo/bin
 # https://github.com/paritytech/parity#build-dependencies
 RUN apt-get -y update && apt-get -y install gcc g++
 
-# debug https://github.com/cyberFund/cybernode/issues/72
-RUN bash -c "exit 1"
-
 # build Parity from source
 COPY 01build.sh .
 RUN bash 01build.sh
