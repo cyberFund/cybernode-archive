@@ -5,25 +5,24 @@ set -e
 # show commands as they are executed 
 set -x
 
+NAME=cyber-markets
+
 echo --- building markets ---
-git clone https://github.com/cyberFund/cyber-markets
-cd cyber-markets
+git clone https://github.com/cyberFund/$NAME
+cd $NAME
+HASH="$(git rev-parse --short HEAD)"
+
 ./gradlew assemble
 
 echo --- cp versioned binary into $HOME/bin/ ---
 mkdir $HOME/bin
-ls -la 
-ls -la build
-ls -la build/libs
+cd build/libs
+ls -la
  
-: 'cd crawler/target
 # bash way to list files into array
-binaries=(xchange-crawler-*.jar)
+binaries=($NAME-*.jar)
 binary=${binaries[0]}
-cp $binary $HOME/bin/xchange-crawler.jar
-# extract config file
-unzip $binary crawler.properties -d $HOME/bin/
+cp $binary $HOME/bin/$NAME.jar
 # record version
-echo $binary > $HOME/bin/VERSION
+echo "$binary $HASH" > $HOME/bin/VERSION
 ls -la $HOME/bin
-'
