@@ -5,7 +5,7 @@ set -e
 # set exit code to non-0 if any piped command returns error
 set -o pipefail
 
-IMAGE=xchange-crawler
+IMAGE=cyber-markets
 
 # absolute path to script's directory
 DIR=$(dirname $(readlink -f "$0"))

@@ -1,4 +1,6 @@
-### xchange-crawler image layout
+### cyber-markets image layout
+
+TBD
 
 * `/cyberapp/xchange-crawler.jar`  - crawler binary
 * `/cyberapp/crawler.properties`   - config file
