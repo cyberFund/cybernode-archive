@@ -6,9 +6,10 @@ set -e
 set -x
 
 NAME=cyber-markets
+BRANCH=master
 
 echo --- building markets ---
-git clone https://github.com/cyberFund/$NAME
+git clone --branch $BRANCH https://github.com/cyberFund/$NAME
 cd $NAME
 HASH="$(git rev-parse --short HEAD)"
 
