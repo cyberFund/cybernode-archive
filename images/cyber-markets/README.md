@@ -1,12 +1,9 @@
 ### cyber-markets image layout
 
-TBD
+* `/cyberapp/cyber-markets.jar`  - markets binary
+* `/cyberapp/VERSION`            - version of markets binary
 
-* `/cyberapp/xchange-crawler.jar`  - crawler binary
-* `/cyberapp/crawler.properties`   - config file
-* `/cyberapp/VERSION`              - version of crawler binary
-
-Project site: https://github.com/cyberFund/xchange-crawler
+Project site: https://github.com/cyberFund/cyber-markets
 
 ### Building image
 
@@ -16,26 +13,22 @@ to build binary and `Dockerfile` to run it. See
 
     ./build-image.sh
 
-This will create two images - `xchange-crawler-build` with
-tools and build artifacts and `xchange-crawler` with
+This will create two images - `cyber-markets-build` with
+tools and build artifacts and `cyber-markets` with
 actual binaries, which are also extracted to `bin/`
 directory in current dir for inspection.
 
 ### Running image
 
-Running `crawler` with default settings:
+Running `markets` with default settings:
 
-    docker run -d -u $(id -u cyber) --name crawler xchange-crawler
+    docker run -d -u $(id -u cyber) --name markets cyber-markets
 
-Overriding configuration. Create custom 
-`crawler.properties` config in in current directory and
-run:
+Overriding configuration is done through environment
+variables. For example, `DEEPSTREAMURL` with default value
+`localhost:6020`.
 
-    docker run -d -u $(id -u cyber) --name crawler -v $PWD/crawler.properties:/cyberapp/crawler.properties xchange-crawler
+    docker run -d -u $(id -u cyber) --name markets cyber-markets
 
-Default config is in [crawler.properties.default] in this
-directory and params specific to cybernode are in
-[crawler.properties].
-
-See [../run-xchange-crawler.sh] for explanation of Docker
+See [../run-cyber-markets.sh] for explanation of Docker
 parameters.
