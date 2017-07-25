@@ -1,3 +1,7 @@
+#!/bin/bash
+
+# fail on error
+set -e
 
 echo --- detecting defaults ---
 go version && go env GOROOT GOPATH
