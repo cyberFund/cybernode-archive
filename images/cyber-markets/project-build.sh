@@ -13,7 +13,9 @@ cd cyber-markets
 echo --- cp versioned binary into $HOME/bin/ ---
 mkdir $HOME/bin
 ls -la 
-
+ls -la build
+ls -la build/libs
+ 
 : 'cd crawler/target
 # bash way to list files into array
 binaries=(xchange-crawler-*.jar)
