@@ -6,10 +6,10 @@ services:
 script:
   # chains
   - ./images/build-fullnode-btcd.sh
-  # [ ] speed up builds for markets testing
-  #- ./images/fullnode/build-parity.sh
+  - ./images/fullnode/build-parity.sh
   # markets
   - ./images/build-markets.sh
 
-# parity
-cache: cargo
+cache:
+  # parity
+  - cargo
