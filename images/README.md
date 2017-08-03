@@ -1,42 +1,53 @@
-*Automation for `cybernode` images*
+*Build scripts for `cybernode` images*
 
 ### TL;DR
 
-Run `./build-*.sh` scripts. **Build images** are not
-pushed. Binaries are extracted to `bin/` subdir of image
-sources.
+Use `./build-*.sh` scripts to build and pack binaries
+into Docker images. Use `./run-*.sh` scripts to execute
+images.
+
+For debugging, binaries are extracted to `bin/` subdir of
+image sources. Images that end in `-build` are used for
+building process itself and can be removed.
 
 ### Common operations
 
-Check version of dockerized software (`btcd` for example):
+Check version of image software (`btcd` for example):
 
     docker inspect --format='{{.Config.Labels.version}}' btcd
+
+Check image command and parameters:
+
+    docker inspect --format='{{.Config.Entrypoint}}' btcd
+
+Explore *container* filesystem:
+
+    docker export btcd | tar -tv
 
 ### Intro
 
 `cybernode` is a cluster of services. Every service runs in
-container to simplify administration, deployment and
-automatic management (also known as `orchestration`).
+own container to simplify "administration, deployment and
+automatic management" (also known as `orchestration`).
 
 Docker is the current choice for running production
-containers. On the other hand image build scripts are kept
+containers. But scripts for building software are kept
 decoupled from Docker for easy migration to alternative
 container providers.
 
-Independent build scripts are named as `01build.sh`, Docker
+Software build scripts are named as `01build.sh`, Docker
 specific files are `Dockerfile` and `Dockerfile-build`.
 Main `build.sh` file currently contains docker commands.
 
 
 ### Building images with Docker
 
-Build process - dependendency download, compilation and
-packaging leaves a lot of garbage on the build system.
-Build tools, sources and dependencies are usually not
-needed for operations. That's why we use separate
-**build images** to build and package things and separate
-**run images** to deploy software. **run images** are what
-is uploaded to public repositories.
+Software for image is built from sources. Build process
+takes place inside special **build image** to isolate
+build artifacts, tools, sources and dependencies from host
+system and target image. The target image with compiled
+binary is called **run image** and it is the one uploaded
+to container repositories.
 
 ##### Build images
 
