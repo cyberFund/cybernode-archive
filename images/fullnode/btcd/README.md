@@ -3,10 +3,26 @@
 `btcd` lacks single BTCDHOME setting to root its data
 under a single directory, such as `/cyberdata`. It uses
 $HOME/.btcd location by default and the following options
-to move certain locations:
+to set certain paths:
 
+    --configfile=     Path to configuration file ($HOME/.btcd/btcd.conf)
+    --datadir=        Directory to store data ($HOME/.btcd/data)
+    --logdir=         Directory to log output. ($HOME/.btcd/logs)
+    --rpccert=        File containing the certificate file ($HOME/.btcd/rpc.cert)
+    --rpckey=         File containing the certificate key ($HOME/.btcd/rpc.key)
 
-CYBERDATA
+We can set $HOME to (which is unset for Docker container)
+to `/cyberdata` and it will make `btcd` store its files in
+$CYBERDATA/.btcd on container host, but instead we modify
+every option to remove `.btcd` prefix and store data using
+the following layout:
+
+    $CYBERDATA/btcd.conf
+    $CYBERDATA/rpc.cert
+    $CYBERDATA/rpc.key
+    $CYBERDATA/<netname>           - blockchain data
+    $CYBERDATA/<netname>/btcd.log  - chain logs
+
 
 ### fullnode-btcd image layout
 
