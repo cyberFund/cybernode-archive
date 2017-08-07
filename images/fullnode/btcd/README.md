@@ -1,10 +1,20 @@
+### btcd setup
+
+`btcd` lacks single BTCDHOME setting to root its data
+under a single directory, such as `/cyberdata`. It uses
+$HOME/.btcd location by default and the following options
+to move certain locations:
+
+
+CYBERDATA
+
 ### fullnode-btcd image layout
 
 * `/cyberapp/btcd`     - main process
 * `/cyberapp/VERSION`  - revision in btcd repository
 * `/cyberdata`         - volume with blockchain data
 
-### btcd configuration and docs
+### btcd config docs
 
 See `btcd --help` ([online](https://godoc.org/github.com/btcsuite/btcd))
 and [sample-btcd.conf](https://github.com/btcsuite/btcd/blob/master/sample-btcd.conf)
