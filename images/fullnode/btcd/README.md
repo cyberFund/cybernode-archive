@@ -28,7 +28,7 @@ the following layout:
 
 * `/cyberapp/btcd`     - main process
 * `/cyberapp/VERSION`  - revision in btcd repository
-* `/cyberdata`         - volume with blockchain data
+* `/cyberdata`         - volume for btcd/blockchain data
 
 ### btcd config docs
 
