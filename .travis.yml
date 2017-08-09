@@ -10,7 +10,7 @@ script:
   # markets
   - ./images/build-markets.sh
 
-before_deploy:
+after_script:
   - ./images/run-fullnode-btcd.sh --version
 
 cache:

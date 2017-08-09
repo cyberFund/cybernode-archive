@@ -3,9 +3,9 @@
 set -e
 
 # empty if `cyber` does not exist, set to `cyber` uid otherwise
-CYBER=$(id -u cyber 2>/dev/null)
-if [-z "$CYBER"]; then
-  echo "Warning: no `cyber` user, running with docker default (`root`)"
+CYBER=$(id -u cyber 2>/dev/null) || true   # "|| true" ignores error
+if [ -z "$CYBER"]; then
+  echo "Warning: no 'cyber' user, running with docker default ('root')"
   RUNUSER=
 else
   # -u $(id -u cyber)  - run container under user `cyber`, param needs uid
@@ -27,4 +27,3 @@ docker run -d --restart always $RUNUSER $PORTS --name $NAME -v /home/cyber/cyber
 #    -d                  - run as daemon 
 #    --name btcd         - just convenient name to find running container
 #    -v .a.:.b.          - mount .a. in host as .b. in container
-
