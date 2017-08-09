@@ -10,6 +10,9 @@ script:
   # markets
   - ./images/build-markets.sh
 
+before_deploy:
+  - ./images/run-fullnode-btcd.sh --version
+
 cache:
   # parity
   - cargo

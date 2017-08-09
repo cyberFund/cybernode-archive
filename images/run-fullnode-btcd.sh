@@ -23,7 +23,8 @@ VERSION=`docker inspect --format='{{.Config.Labels.version}}' $IMAGE`
 PORTS="-p 8333:8333 -p 127.0.0.1:8334:8334"
 
 echo ... starting $NAME $VERSION from $IMAGE
-docker run -d --restart always $RUNUSER $PORTS --name $NAME -v /home/cyber/cyberdata/$NAME:/cyberdata $IMAGE
+docker run -d --restart always $RUNUSER $PORTS --name $NAME -v /home/cyber/cyberdata/$NAME:/cyberdata $IMAGE $*
 #    -d                  - run as daemon 
 #    --name btcd         - just convenient name to find running container
 #    -v .a.:.b.          - mount .a. in host as .b. in container
+
