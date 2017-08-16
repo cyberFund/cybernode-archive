@@ -39,8 +39,11 @@ VERSION=`docker inspect --format='{{.Config.Labels.version}}' $IMAGE`
 PORTS="-p 8333:8333 -p 127.0.0.1:8334:8334"
 
 echo ... starting $NAME $VERSION from $IMAGE
-docker run -d --restart always $RUNUSER $PORTS --name $NAME -v $CYBERDATA:/cyberdata $IMAGE $*
-#    -d                  - run as daemon 
+ARGS=
+#ARGS=-d debug --rpcuser=cyber --rpcpass=cyber --rpclisten=0.0.0.0:8334 $*
+docker run -d --restart always --name $NAME $RUNUSER $PORTS -v $CYBERDATA:/cyberdata $IMAGE $ARGS $*
+#    -d                  - run as daemon
+#    --restart always    - when to restart container
 #    --name btcd         - just convenient name to find running container
 #    -v .a.:.b.          - mount .a. in host as .b. in container
 
