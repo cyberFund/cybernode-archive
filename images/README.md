@@ -20,9 +20,6 @@ Check image command and parameters:
 
     docker inspect --format='{{.Config.Entrypoint}}' btcd
 
-Explore *container* filesystem:
-
-    docker export btcd | tar -tv
 
 ### Intro
 
@@ -148,3 +145,33 @@ or run `docker` with explicit user command:
 `-u` or `--user` options doesn't accept user name and
 requires numeric UID passed as parameter, for details, see
 https://github.com/moby/moby/issues/22323#issuecomment-215449380
+
+
+### Troubleshooting
+
+We pack binaries in read-only docker images. They become
+read-only when we run them under user `cyber` who is
+different from `root` and don't have write access to
+anything except mounted volumes.
+
+For example, if `docker logs` shows:
+
+    loadConfig: Failed to create home directory: mkdir /.btcd: permission denied
+
+That means that `btcd` can not create `/.btcd` because
+there is no rights for `cyber` user to create dir in
+container root, and all processes run in root dir by
+default. Make sure that application writes all its files
+in `/cyberdata` volume.
+
+To discover commands that shell scrips run, launch them
+with bash `-x`:
+
+    bash -x run-fullnode-btcd.sh
+
+It also helps to run container as root (remove -u UID param
+from `docker run`) and explore its filesystem afterwards
+with:
+
+    docker export btcd | tar -tv
+
