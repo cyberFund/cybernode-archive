@@ -21,7 +21,7 @@ cd $GOPATH/src/github.com/btcsuite/btcd
 git checkout $BTCDHASH
 
 echo --- applying patches ---
-git am $DIR/02notls.patch
+git -c user.name='cyber' -c user.email='cyber@build' am $DIR/02notls.patch
 
 echo --- fetch dependencies into vendor/ ---
 $GOPATH/bin/glide install
