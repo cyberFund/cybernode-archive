@@ -7,6 +7,7 @@ BTCDHASH=master
 
 echo --- detecting defaults ---
 go version && go env GOROOT GOPATH
+GOPATH=`go env GOPATH`
 
 echo --- get dependency manager ---
 go get -u github.com/Masterminds/glide
@@ -17,7 +18,7 @@ cd $GOPATH/src/github.com/btcsuite/btcd
 git checkout $BTCDHASH
 
 echo --- fetch dependencies into vendor/ ---
-glide install
+$GOPATH/bin/glide install
 ls -la $GOPATH/bin
 
 echo --- build all tools found in cmd/ to $GOPATH/bin ---
