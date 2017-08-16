@@ -3,6 +3,8 @@
 # fail on error
 set -e
 
+BTCDHASH=master
+
 echo --- detecting defaults ---
 go version && go env GOROOT GOPATH
 
@@ -12,6 +14,7 @@ go get -u github.com/Masterminds/glide
 echo --- clone btcd sources ---
 git clone https://github.com/btcsuite/btcd $GOPATH/src/github.com/btcsuite/btcd
 cd $GOPATH/src/github.com/btcsuite/btcd
+git checkout $BTCDHASH
 
 echo --- fetch dependencies into vendor/ ---
 glide install
