@@ -3,6 +3,10 @@ FROM scratch
 ADD bin/* /cyberapp/
 VOLUME /cyberdata
 
+# `btcd` still tries to create its .btcd
+# https://github.com/btcsuite/btcd/issues/995
+ENV HOME /cyberdata
+
 # https://github.com/btcsuite/btcd/blob/master/docs/default_ports.md
 # Bitcoin P2P
 EXPOSE 8333

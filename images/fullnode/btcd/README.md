@@ -11,17 +11,23 @@ to set certain paths:
     --rpccert=        File containing the certificate file ($HOME/.btcd/rpc.cert)
     --rpckey=         File containing the certificate key ($HOME/.btcd/rpc.key)
 
-We can set $HOME to (which is unset for Docker container)
-to `/cyberdata` and it will make `btcd` store its files in
-$CYBERDATA/.btcd on container host, but instead we modify
-every option to remove `.btcd` prefix and store data using
-the following layout:
+Even when these params are explicitly set to be out of
+`.btcd` the app still tries to create this directory at
+$HOME which is unset for containers, and this attemp makes
+container fail. https://github.com/btcsuite/btcd/issues/995
 
-    $CYBERDATA/btcd.conf
-    $CYBERDATA/rpc.cert
-    $CYBERDATA/rpc.key
+So we explicitly set chain locations:
+
     $CYBERDATA/<netname>           - blockchain data
     $CYBERDATA/<netname>/btcd.log  - chain logs
+
+But for everything else we set HOME environment variable to
+/cyberdata to allow `btcd` create `/cyberdata/.btcd` and be
+happy. This set location for the following files:
+
+    $CYBERDATA/.btcd/btcd.conf
+    $CYBERDATA/.btcd/rpc.cert
+    $CYBERDATA/.btcd/rpc.key
 
 
 ### fullnode-btcd image layout
