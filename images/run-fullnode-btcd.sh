@@ -9,17 +9,17 @@ NAME=btcd
 
 # empty if `cyber` does not exist, set to `cyber` uid otherwise
 CYBER=$(id -u cyber 2>/dev/null) || true   # "|| true" ignores error
-if [ -z "$CYBER"]; then
+if [ -z "$CYBER" ]; then
   echo "Warning: no 'cyber' user, running with docker default ('root')"
   RUNUSER=
 else
   # -u $(id -u cyber)  - run container under user `cyber`, param needs uid
-  RUNUSER=-u $CYBER
+  RUNUSER="-u $CYBER"
 fi
 
 # if /cyberdata does not exist
-if [ -z "$CYBERDATA"]; then
-  if [ -z "$CYBER"]; then
+if [ -z "$CYBERDATA" ]; then
+  if [ -z "$CYBER" ]; then
     echo "Error: set CYBERDATA to store `btcd` blockchain (150Gb+)."
     echo "       Make sure to use separate partition from your root"
     echo "       to avoid filling system disk and locking your system."
