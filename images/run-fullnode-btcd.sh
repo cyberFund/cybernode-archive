@@ -39,8 +39,8 @@ VERSION=`docker inspect --format='{{.Config.Labels.version}}' $IMAGE`
 PORTS="-p 8333:8333 -p 127.0.0.1:8334:8334"
 
 echo ... starting $NAME $VERSION from $IMAGE
-ARGS=
-#ARGS=-d debug --rpcuser=cyber --rpcpass=cyber --rpclisten=0.0.0.0:8334 $*
+#ARGS=-d debug
+ARGS="--rpcuser=cyber --rpcpass=cyber --rpclisten=0.0.0.0:8334 --notls"
 docker run -d --restart always --name $NAME $RUNUSER $PORTS -v $CYBERDATA:/cyberdata $IMAGE $ARGS $*
 #    -d                  - run as daemon
 #    --restart always    - when to restart container
