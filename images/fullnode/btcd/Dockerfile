@@ -9,7 +9,7 @@ EXPOSE 8333
 # JSON-RPC + WebSockets
 EXPOSE 8334
 
-ENTRYPOINT ["/cyberapp/btcd"]
+ENTRYPOINT ["/cyberapp/btcd", "--datadir=/cyberdata"]
 # disable logging to disk by default
 # access with `docker logs` instead
-CMD ["--datadir=/cyberdata --logir="]
+CMD ["--logdir="]
