@@ -3,6 +3,9 @@
 # fail on error
 set -e
 
+# absolute path to script's directory
+DIR=$(dirname $(readlink -f "$0"))
+
 BTCDHASH=master
 
 echo --- detecting defaults ---
@@ -16,6 +19,9 @@ echo --- clone btcd sources ---
 git clone https://github.com/btcsuite/btcd $GOPATH/src/github.com/btcsuite/btcd
 cd $GOPATH/src/github.com/btcsuite/btcd
 git checkout $BTCDHASH
+
+echo --- applying patches ---
+git am $DIR/02notls.patch
 
 echo --- fetch dependencies into vendor/ ---
 $GOPATH/bin/glide install
