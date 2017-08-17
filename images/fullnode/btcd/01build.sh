@@ -4,7 +4,7 @@
 set -e
 
 # absolute path to script's directory
-DIR=$(dirname $(readlink -f "$0"))
+DIR=$(pwd)
 
 BTCDHASH=master
 
@@ -16,7 +16,13 @@ echo --- get dependency manager ---
 go get -u github.com/Masterminds/glide
 
 echo --- clone btcd sources ---
-git clone https://github.com/btcsuite/btcd $GOPATH/src/github.com/btcsuite/btcd
+if [ ! -d $GOPATH/src/github.com/btcsuite/btcd ] ; then
+    git clone https://github.com/btcsuite/btcd $GOPATH/src/github.com/btcsuite/btcd
+else
+    echo --- detected btcd, cleaning ---
+    rm -R $GOPATH/src/github.com/btcsuite/btcd
+    git clone https://github.com/btcsuite/btcd $GOPATH/src/github.com/btcsuite/btcd
+fi
 cd $GOPATH/src/github.com/btcsuite/btcd
 git checkout $BTCDHASH
 # record revision
@@ -27,6 +33,8 @@ echo --- applying patches ---
 git -c user.name='cyber' -c user.email='cyber@build' am $DIR/02notls.patch
 echo "patch-revision: `git rev-parse HEAD`" >> $GOPATH/bin/VERSION
 
+git -c user.name='cyber' -c user.email='cyber@build' am $DIR/03getblockbynumber.patch
+echo "patch-revision: `git rev-parse HEAD`" >> $GOPATH/bin/VERSION
 
 echo --- fetch dependencies into vendor/ ---
 $GOPATH/bin/glide install

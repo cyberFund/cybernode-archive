@@ -1,0 +1,466 @@
+From 6d1da8f394b835dbdccb6e258e03dbdf0c2767c9 Mon Sep 17 00:00:00 2001
+From: litvintech <litvintech@gmail.com>
+Date: Thu, 17 Aug 2017 15:49:06 +0200
+Subject: [PATCH] Added method getblockbynumber
+
+---
+ btcjson/chainsvrcmds.go      |  21 ++++++++
+ btcjson/chainsvrcmds_test.go |  49 +++++++++++++++++
+ btcjson/chainsvrresults.go   |  23 ++++++++
+ rpcclient/chain.go           | 126 +++++++++++++++++++++++++++++++++++++++++++
+ rpcserver.go                 | 108 +++++++++++++++++++++++++++++++++++++
+ rpcserverhelp.go             |  28 ++++++++++
+ 6 files changed, 355 insertions(+)
+
+diff --git a/btcjson/chainsvrcmds.go b/btcjson/chainsvrcmds.go
+index 83c417e..b9d4d76 100644
+--- a/btcjson/chainsvrcmds.go
++++ b/btcjson/chainsvrcmds.go
+@@ -145,6 +145,26 @@ func NewGetBlockCmd(hash string, verbose, verboseTx *bool) *GetBlockCmd {
+ 	}
+ }
+ 
++// GetBlockByNumberCmd defines the getblockbynumber JSON-RPC command.
++type GetBlockByNumberCmd struct {
++	Index     int64
++	Verbose   *bool `jsonrpcdefault:"true"`
++	VerboseTx *bool `jsonrpcdefault:"false"`
++}
++
++// NewGetBlockByNumberCmd returns a new instance which can be used to issue a getblockbynumber
++// JSON-RPC command.
++//
++// The parameters which are pointers indicate they are optional.  Passing nil
++// for optional parameters will use the default value.
++func NewGetBlockByNumberCmd(index int64, verbose, verboseTx *bool) *GetBlockByNumberCmd {
++	return &GetBlockByNumberCmd{
++		Index:     index,
++		Verbose:   verbose,
++		VerboseTx: verboseTx,
++	}
++}
++
+ // GetBlockChainInfoCmd defines the getblockchaininfo JSON-RPC command.
+ type GetBlockChainInfoCmd struct{}
+ 
+@@ -751,6 +771,7 @@ func init() {
+ 	MustRegisterCmd("getaddednodeinfo", (*GetAddedNodeInfoCmd)(nil), flags)
+ 	MustRegisterCmd("getbestblockhash", (*GetBestBlockHashCmd)(nil), flags)
+ 	MustRegisterCmd("getblock", (*GetBlockCmd)(nil), flags)
++	MustRegisterCmd("getblockbynumber", (*GetBlockByNumberCmd)(nil), flags)
+ 	MustRegisterCmd("getblockchaininfo", (*GetBlockChainInfoCmd)(nil), flags)
+ 	MustRegisterCmd("getblockcount", (*GetBlockCountCmd)(nil), flags)
+ 	MustRegisterCmd("getblockhash", (*GetBlockHashCmd)(nil), flags)
+diff --git a/btcjson/chainsvrcmds_test.go b/btcjson/chainsvrcmds_test.go
+index d623012..f4b025f 100644
+--- a/btcjson/chainsvrcmds_test.go
++++ b/btcjson/chainsvrcmds_test.go
+@@ -188,6 +188,55 @@ func TestChainSvrCmds(t *testing.T) {
+ 			},
+ 		},
+ 		{
++			name: "getblockbynumber",
++			newCmd: func() (interface{}, error) {
++				return btcjson.NewCmd("getblockbynumber", "200")
++			},
++			staticCmd: func() interface{} {
++				return btcjson.NewGetBlockByNumberCmd("200", nil, nil)
++			},
++			marshalled: `{"jsonrpc":"1.0","method":"getblockbynumber","params":["200"],"id":1}`,
++			unmarshalled: &btcjson.GetBlockByNumberCmd{
++				Index:     200,
++				Verbose:   btcjson.Bool(true),
++				VerboseTx: btcjson.Bool(false),
++			},
++		},
++		{
++			name: "getblockbynumber required optional1",
++			newCmd: func() (interface{}, error) {
++				// Intentionally use a source param that is
++				// more pointers than the destination to
++				// exercise that path.
++				verbosePtr := btcjson.Bool(true)
++				return btcjson.NewCmd("getblockbynumber", "200", &verbosePtr)
++			},
++			staticCmd: func() interface{} {
++				return btcjson.NewGetBlockByNumberCmd("200", btcjson.Bool(true), nil)
++			},
++			marshalled: `{"jsonrpc":"1.0","method":"getblockbynumber","params":["200",true],"id":1}`,
++			unmarshalled: &btcjson.GetBlockByNumberCmd{
++				Index:     200,
++				Verbose:   btcjson.Bool(true),
++				VerboseTx: btcjson.Bool(false),
++			},
++		},
++		{
++			name: "getblockbynumber required optional2",
++			newCmd: func() (interface{}, error) {
++				return btcjson.NewCmd("getblockbynumber", "200", true, true)
++			},
++			staticCmd: func() interface{} {
++				return btcjson.NewGetBlockByNumberCmd("200", btcjson.Bool(true), btcjson.Bool(true))
++			},
++			marshalled: `{"jsonrpc":"1.0","method":"getblockbynumber","params":["200",true,true],"id":1}`,
++			unmarshalled: &btcjson.GetBlockByNumberCmd{
++				Index:      200,
++				Verbose:   btcjson.Bool(true),
++				VerboseTx: btcjson.Bool(true),
++			},
++		},
++		{
+ 			name: "getblockchaininfo",
+ 			newCmd: func() (interface{}, error) {
+ 				return btcjson.NewCmd("getblockchaininfo")
+diff --git a/btcjson/chainsvrresults.go b/btcjson/chainsvrresults.go
+index 9af1d39..53c4666 100644
+--- a/btcjson/chainsvrresults.go
++++ b/btcjson/chainsvrresults.go
+@@ -47,6 +47,29 @@ type GetBlockVerboseResult struct {
+ 	NextHash      string        `json:"nextblockhash,omitempty"`
+ }
+ 
++// GetBlockByNumberVerboseResult models the data from the getblock command when the
++// verbose flag is set.  When the verbose flag is not set, getblock returns a
++// hex-encoded string.
++type GetBlockByNumberVerboseResult struct {
++	Hash          string        `json:"hash"`
++	Confirmations uint64        `json:"confirmations"`
++	StrippedSize  int32         `json:"strippedsize"`
++	Size          int32         `json:"size"`
++	Weight        int32         `json:"weight"`
++	Height        int64         `json:"height"`
++	Version       int32         `json:"version"`
++	VersionHex    string        `json:"versionHex"`
++	MerkleRoot    string        `json:"merkleroot"`
++	Tx            []string      `json:"tx,omitempty"`
++	RawTx         []TxRawResult `json:"rawtx,omitempty"`
++	Time          int64         `json:"time"`
++	Nonce         uint32        `json:"nonce"`
++	Bits          string        `json:"bits"`
++	Difficulty    float64       `json:"difficulty"`
++	PreviousHash  string        `json:"previousblockhash"`
++	NextHash      string        `json:"nextblockhash,omitempty"`
++}
++
+ // CreateMultiSigResult models the data returned from the createmultisig
+ // command.
+ type CreateMultiSigResult struct {
+diff --git a/rpcclient/chain.go b/rpcclient/chain.go
+index 2539bc8..fa977d2 100644
+--- a/rpcclient/chain.go
++++ b/rpcclient/chain.go
+@@ -178,6 +178,132 @@ func (c *Client) GetBlockVerboseTx(blockHash *chainhash.Hash) (*btcjson.GetBlock
+ 	return c.GetBlockVerboseTxAsync(blockHash).Receive()
+ }
+ 
++// FutureGetBlockByNumberResult is a future promise to deliver the result of a
++// GetBlockByNumberAsync RPC invocation (or an applicable error).
++type FutureGetBlockByNumberResult chan *response
++
++// Receive waits for the response promised by the future and returns the raw
++// block requested from the server given its hash.
++func (r FutureGetBlockByNumberResult) Receive() (*wire.MsgBlock, error) {
++	res, err := receiveFuture(r)
++	if err != nil {
++		return nil, err
++	}
++
++	// Unmarshal result as a string.
++	var blockHex string
++	err = json.Unmarshal(res, &blockHex)
++	if err != nil {
++		return nil, err
++	}
++
++	// Decode the serialized block hex to raw bytes.
++	serializedBlock, err := hex.DecodeString(blockHex)
++	if err != nil {
++		return nil, err
++	}
++
++	// Deserialize the block and return it.
++	var msgBlock wire.MsgBlock
++	err = msgBlock.Deserialize(bytes.NewReader(serializedBlock))
++	if err != nil {
++		return nil, err
++	}
++	return &msgBlock, nil
++}
++
++// GetBlockByNumberAsync returns an instance of a type that can be used to get the
++// result of the RPC at some future time by invoking the Receive function on the
++// returned instance.
++//
++// See GetBlockByNumber for the blocking version and more details.
++func (c *Client) GetBlockByNumberAsync(blockHeight int64) FutureGetBlockByNumberResult {
++	// hash := ""
++	// if blockHash != nil {
++	// 	hash = blockHash.String()
++	// }
++
++	cmd := btcjson.NewGetBlockByNumberCmd(blockHeight, btcjson.Bool(false), nil)
++	return c.sendCmd(cmd)
++}
++
++// GetBlockByNumber returns a raw block from the server given its hash.
++//
++// See GetBlockByNumberVerbose to retrieve a data structure with information about the
++// block instead.
++func (c *Client) GetBlockByNumber(blockHeight int64) (*wire.MsgBlock, error) {
++	return c.GetBlockByNumberAsync(blockHeight).Receive()
++}
++
++// FutureGetBlockByNumberVerboseResult is a future promise to deliver the result of a
++// GetBlockByNumberVerboseAsync RPC invocation (or an applicable error).
++type FutureGetBlockByNumberVerboseResult chan *response
++
++// Receive waits for the response promised by the future and returns the data
++// structure from the server with information about the requested block.
++func (r FutureGetBlockByNumberVerboseResult) Receive() (*btcjson.GetBlockByNumberVerboseResult, error) {
++	res, err := receiveFuture(r)
++	if err != nil {
++		return nil, err
++	}
++
++	// Unmarshal the raw result into a BlockResult.
++	var blockResult btcjson.GetBlockByNumberVerboseResult
++	err = json.Unmarshal(res, &blockResult)
++	if err != nil {
++		return nil, err
++	}
++	return &blockResult, nil
++}
++
++// GetBlockByNumberVerboseAsync returns an instance of a type that can be used to get
++// the result of the RPC at some future time by invoking the Receive function on
++// the returned instance.
++//
++// See GetBlockByNumberVerbose for the blocking version and more details.
++func (c *Client) GetBlockByNumberVerboseAsync(blockHeight int64) FutureGetBlockByNumberVerboseResult {
++	// hash := ""
++	// if blockHash != nil {
++	// 	hash = blockHash.String()
++	// }
++
++	cmd := btcjson.NewGetBlockByNumberCmd(blockHeight, btcjson.Bool(true), nil)
++	return c.sendCmd(cmd)
++}
++
++// GetBlockByNumberVerbose returns a data structure from the server with information
++// about a block given its hash.
++//
++// See GetBlockByNumberVerboseTx to retrieve transaction data structures as well.
++// See GetBlockByNumber to retrieve a raw block instead.
++func (c *Client) GetBlockByNumberVerbose(blockHeight int64) (*btcjson.GetBlockByNumberVerboseResult, error) {
++	return c.GetBlockByNumberVerboseAsync(blockHeight).Receive()
++}
++
++// GetBlockByNumberVerboseTxAsync returns an instance of a type that can be used to get
++// the result of the RPC at some future time by invoking the Receive function on
++// the returned instance.
++//
++// See GetBlockByNumberVerboseTx or the blocking version and more details.
++func (c *Client) GetBlockByNumberVerboseTxAsync(blockHeight int64) FutureGetBlockByNumberVerboseResult {
++	hash := ""
++	if blockHash != nil {
++		hash = blockHash.String()
++	}
++
++	cmd := btcjson.NewGetBlockByNumberCmd(blockHeight, btcjson.Bool(true), btcjson.Bool(true))
++	return c.sendCmd(cmd)
++}
++
++// GetBlockByNumberVerboseTx returns a data structure from the server with information
++// about a block and its transactions given its hash.
++//
++// See GetBlockByNumberVerbose if only transaction hashes are preferred.
++// See GetBlockByNumber to retrieve a raw block instead.
++func (c *Client) GetBlockByNumberVerboseTx(blockHeight int64) (*btcjson.GetBlockByNumberVerboseResult, error) {
++	return c.GetBlockByNumberVerboseTxAsync(blockHeight).Receive()
++}
++
+ // FutureGetBlockCountResult is a future promise to deliver the result of a
+ // GetBlockCountAsync RPC invocation (or an applicable error).
+ type FutureGetBlockCountResult chan *response
+diff --git a/rpcserver.go b/rpcserver.go
+index b115cb6..688342a 100644
+--- a/rpcserver.go
++++ b/rpcserver.go
+@@ -137,6 +137,7 @@ var rpcHandlersBeforeInit = map[string]commandHandler{
+ 	"getbestblock":          handleGetBestBlock,
+ 	"getbestblockhash":      handleGetBestBlockHash,
+ 	"getblock":              handleGetBlock,
++	"getblockbynumber":      handleGetBlockByNumber,
+ 	"getblockchaininfo":     handleGetBlockChainInfo,
+ 	"getblockcount":         handleGetBlockCount,
+ 	"getblockhash":          handleGetBlockHash,
+@@ -255,6 +256,7 @@ var rpcLimited = map[string]struct{}{
+ 	"getbestblock":          {},
+ 	"getbestblockhash":      {},
+ 	"getblock":              {},
++	"getblockbynumber":      {},
+ 	"getblockcount":         {},
+ 	"getblockhash":          {},
+ 	"getblockheader":        {},
+@@ -1134,6 +1136,112 @@ func handleGetBlock(s *rpcServer, cmd interface{}, closeChan <-chan struct{}) (i
+ 	return blockReply, nil
+ }
+ 
++// handleGetBlockByNumber implements the getblock command.
++func handleGetBlockByNumber(s *rpcServer, cmd interface{}, closeChan <-chan struct{}) (interface{}, error) {
++	c := cmd.(*btcjson.GetBlockByNumberCmd)
++
++	hash, err := s.cfg.Chain.BlockHashByHeight(int32(c.Index))
++	if err != nil {
++		return nil, &btcjson.RPCError{
++			Code:    btcjson.ErrRPCOutOfRange,
++			Message: "Block number out of range",
++		}
++	}
++
++	var blkBytes []byte
++	err = s.cfg.DB.View(func(dbTx database.Tx) error {
++		var err error
++		blkBytes, err = dbTx.FetchBlock(hash)
++		return err
++	})
++	if err != nil {
++		return nil, &btcjson.RPCError{
++			Code:    btcjson.ErrRPCBlockNotFound,
++			Message: "Block not found",
++		}
++	}
++
++	// When the verbose flag isn't set, simply return the serialized block
++	// as a hex-encoded string.
++	if c.Verbose != nil && !*c.Verbose {
++		return hex.EncodeToString(blkBytes), nil
++	}
++
++	// The verbose flag is set, so generate the JSON object and return it.
++
++	// Deserialize the block.
++	blk, err := btcutil.NewBlockFromBytes(blkBytes)
++	if err != nil {
++		context := "Failed to deserialize block"
++		return nil, internalRPCError(err.Error(), context)
++	}
++
++	// Get the block height from chain.
++	blockHeight, err := s.cfg.Chain.BlockHeightByHash(hash)
++	if err != nil {
++		context := "Failed to obtain block height"
++		return nil, internalRPCError(err.Error(), context)
++	}
++	blk.SetHeight(blockHeight)
++	best := s.cfg.Chain.BestSnapshot()
++
++	// Get next block hash unless there are none.
++	var nextHashString string
++	if blockHeight < best.Height {
++		nextHash, err := s.cfg.Chain.BlockHashByHeight(blockHeight + 1)
++		if err != nil {
++			context := "No next block"
++			return nil, internalRPCError(err.Error(), context)
++		}
++		nextHashString = nextHash.String()
++	}
++
++	params := s.cfg.ChainParams
++	blockHeader := &blk.MsgBlock().Header
++	blockReply := btcjson.GetBlockByNumberVerboseResult{
++		Hash:          hash.String(),
++		Version:       blockHeader.Version,
++		VersionHex:    fmt.Sprintf("%08x", blockHeader.Version),
++		MerkleRoot:    blockHeader.MerkleRoot.String(),
++		PreviousHash:  blockHeader.PrevBlock.String(),
++		Nonce:         blockHeader.Nonce,
++		Time:          blockHeader.Timestamp.Unix(),
++		Confirmations: uint64(1 + best.Height - blockHeight),
++		Height:        int64(blockHeight),
++		Size:          int32(len(blkBytes)),
++		StrippedSize:  int32(blk.MsgBlock().SerializeSizeStripped()),
++		Weight:        int32(blockchain.GetBlockWeight(blk)),
++		Bits:          strconv.FormatInt(int64(blockHeader.Bits), 16),
++		Difficulty:    getDifficultyRatio(blockHeader.Bits, params),
++		NextHash:      nextHashString,
++	}
++
++	if c.VerboseTx == nil || !*c.VerboseTx {
++		transactions := blk.Transactions()
++		txNames := make([]string, len(transactions))
++		for i, tx := range transactions {
++			txNames[i] = tx.Hash().String()
++		}
++
++		blockReply.Tx = txNames
++	} else {
++		txns := blk.Transactions()
++		rawTxns := make([]btcjson.TxRawResult, len(txns))
++		for i, tx := range txns {
++			rawTxn, err := createTxRawResult(params, tx.MsgTx(),
++				tx.Hash().String(), blockHeader, hash.String(),
++				blockHeight, best.Height)
++			if err != nil {
++				return nil, err
++			}
++			rawTxns[i] = *rawTxn
++		}
++		blockReply.RawTx = rawTxns
++	}
++
++	return blockReply, nil
++}
++
+ // softForkStatus converts a ThresholdState state into a human readable string
+ // corresponding to the particular state.
+ func softForkStatus(state blockchain.ThresholdState) (string, error) {
+diff --git a/rpcserverhelp.go b/rpcserverhelp.go
+index c615d03..d26ca89 100644
+--- a/rpcserverhelp.go
++++ b/rpcserverhelp.go
+@@ -159,6 +159,15 @@ var helpDescsEnUS = map[string]string{
+ 	"getblock--condition1": "verbose=true",
+ 	"getblock--result0":    "Hex-encoded bytes of the serialized block",
+ 
++	// GetBlockByNumberCmd help.
++	"getblockbynumber--synopsis":   								  "Returns information about a block given its hash.",
++	"getblockbynumber-hash":        								  "The hash of the block",
++	"getblockbynumber-verbose":     								  "Specifies the block is returned as a JSON object instead of hex-encoded string",
++	"getblockbynumber-verbosetx":   								  "Specifies that each transaction is returned as a JSON object and only applies if the verbose flag is true (btcd extension)",
++	"getblockbynumber--condition0": 								  "verbose=false",
++	"getblockbynumber--condition1": 								  "verbose=true",
++	"getblockbynumber--result0":    								  "Hex-encoded bytes of the serialized block",
++
+ 	// GetBlockChainInfoCmd help.
+ 	"getblockchaininfo--synopsis": "Returns information about the current blockchain state and the status of any active soft-fork deployments.",
+ 
+@@ -234,6 +243,25 @@ var helpDescsEnUS = map[string]string{
+ 	"getblockverboseresult-strippedsize":      "The size of the block without witness data",
+ 	"getblockverboseresult-weight":            "The weight of the block",
+ 
++	// GetBlockByNumberVerboseResult help.
++	"getblockbynumberverboseresult-hash":              "The hash of the block (same as provided)",
++	"getblockbynumberverboseresult-confirmations":     "The number of confirmations",
++	"getblockbynumberverboseresult-size":              "The size of the block",
++	"getblockbynumberverboseresult-height":            "The height of the block in the block chain",
++	"getblockbynumberverboseresult-version":           "The block version",
++	"getblockbynumberverboseresult-versionHex":        "The block version in hexidecimal",
++	"getblockbynumberverboseresult-merkleroot":        "Root hash of the merkle tree",
++	"getblockbynumberverboseresult-tx":                "The transaction hashes (only when verbosetx=false)",
++	"getblockbynumberverboseresult-rawtx":             "The transactions as JSON objects (only when verbosetx=true)",
++	"getblockbynumberverboseresult-time":              "The block time in seconds since 1 Jan 1970 GMT",
++	"getblockbynumberverboseresult-nonce":             "The block nonce",
++	"getblockbynumberverboseresult-bits":              "The bits which represent the block difficulty",
++	"getblockbynumberverboseresult-difficulty":        "The proof-of-work difficulty as a multiple of the minimum difficulty",
++	"getblockbynumberverboseresult-previousblockhash": "The hash of the previous block",
++	"getblockbynumberverboseresult-nextblockhash":     "The hash of the next block (only if there is one)",
++	"getblockbynumberverboseresult-strippedsize":      "The size of the block without witness data",
++	"getblockbynumberverboseresult-weight":            "The weight of the block",
++
+ 	// GetBlockCountCmd help.
+ 	"getblockcount--synopsis": "Returns the number of blocks in the longest block chain.",
+ 	"getblockcount--result0":  "The current block count",
+-- 
+2.10.2
+
