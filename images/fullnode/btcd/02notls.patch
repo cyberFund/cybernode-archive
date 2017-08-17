@@ -1,0 +1,55 @@
+From 31ca0861386d15f648a34af7bfd5be1359b6537d Mon Sep 17 00:00:00 2001
+From: Anatoli Babenia <anatoli@rainforce.org>
+Date: Thu, 17 Aug 2017 01:44:22 +0300
+Subject: [PATCH] Allow --notls when listening on all interfaces
+
+This is useful when wrapping `btcd` into docker container,
+which requires internal process to listen on external ports
+to forward them to 127.0.0.1:8334 on host.
+---
+ config.go | 21 +++------------------
+ 1 file changed, 3 insertions(+), 18 deletions(-)
+
+diff --git a/config.go b/config.go
+index 1266ce4..ca1202b 100644
+--- a/config.go
++++ b/config.go
+@@ -862,16 +862,10 @@ func loadConfig() (*config, []string, error) {
+ 	cfg.RPCListeners = normalizeAddresses(cfg.RPCListeners,
+ 		activeNetParams.rpcPort)
+ 
+-	// Only allow TLS to be disabled if the RPC is bound to localhost
+-	// addresses.
+-	if !cfg.DisableRPC && cfg.DisableTLS {
+-		allowedTLSListeners := map[string]struct{}{
+-			"localhost": {},
+-			"127.0.0.1": {},
+-			"::1":       {},
+-		}
++	// Check RPC addresses and allow TLS to be disabled for all requests.
++	if !cfg.DisableRPC {
+ 		for _, addr := range cfg.RPCListeners {
+-			host, _, err := net.SplitHostPort(addr)
++			_, _, err := net.SplitHostPort(addr)
+ 			if err != nil {
+ 				str := "%s: RPC listen interface '%s' is " +
+ 					"invalid: %v"
+@@ -880,15 +874,6 @@ func loadConfig() (*config, []string, error) {
+ 				fmt.Fprintln(os.Stderr, usageMessage)
+ 				return nil, nil, err
+ 			}
+-			if _, ok := allowedTLSListeners[host]; !ok {
+-				str := "%s: the --notls option may not be used " +
+-					"when binding RPC to non localhost " +
+-					"addresses: %s"
+-				err := fmt.Errorf(str, funcName, addr)
+-				fmt.Fprintln(os.Stderr, err)
+-				fmt.Fprintln(os.Stderr, usageMessage)
+-				return nil, nil, err
+-			}
+ 		}
+ 	}
+ 
+-- 
+2.13.5
+

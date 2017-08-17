@@ -7,7 +7,7 @@ FROM golang:1.8
 # GOPATH: /go
 
 # build time commands
-COPY 01build.sh .
+COPY [0-9]* ./
 RUN ./01build.sh
 
 VOLUME /build
