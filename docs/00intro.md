@@ -4,7 +4,9 @@ provides full information about different blockchains.
 These software **components** are:
 
   - [full blockchain nodes](fullnode) for different blockchains
-  - exchange [crawler](crawler) that collects market data
+  - market data collector [cyber-markets](markets)
+  - status dashboard to get cybernode state
+  - frontends for user level services
   - [others](plzask)
 
 Every component is wrapped into separate Docker **container**.
@@ -18,7 +20,7 @@ use Ubuntu 16.04 as a base system for all our **node**s. Let's
 clarify terminology:
 
   * **node** - VM or physical machine that runs containers
-  * **component** - single service wrapped into container
+  * **component** - some software wrapped into container
   * **cybernode** - cluster of nodes that connects
     containers with each other and provides external API
 
@@ -34,7 +36,7 @@ guidelines from Kubernetes.
 
 
 [fullnode]: https://github.com/cyberFund/cybernode/issues?q=label%3Afullnode
-[crawler]: https://github.com/cyberFund/xchange-crawler
+[markets]: https://github.com/cyberFund/cyber-markets
 [plzask]: https://github.com/cyberFund/cybernode/issues/new?title=docs/00intro.md:%20What%20are%20missing%20components?
 
 [katacoda]: https://www.katacoda.com/courses/docker/
