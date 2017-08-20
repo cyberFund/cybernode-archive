@@ -6,13 +6,9 @@ services:
 script:
   # chains
   - ./images/build-fullnode-btcd.sh
-  - ./images/fullnode/build-parity.sh
+  #- ./images/fullnode/build-parity.sh
   # markets
   - ./images/build-markets.sh
 
 after_script:
   - ./images/run-fullnode-btcd.sh --version
-
-cache:
-  # parity
-  - cargo
