@@ -20,9 +20,8 @@ HASH="$(git rev-parse --short HEAD)"
 
 echo --- cp versioned binaries into $HOME/bin/ ---
 mkdir $HOME/bin
-ls -la connectors/build
-tree connectors/build/install
-tree connectors/build/steam-api
+ls -laR connectors/build/install
+ls -laR stream-api/build/install
 
 # bash way to list files into array
 binaries=($NAME-*.jar)
