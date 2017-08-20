@@ -6,7 +6,7 @@ set -e
 set -x
 
 NAME=cyber-markets
-BRANCH=master
+BRANCH=development
 
 echo --- building markets ---
 git clone --branch $BRANCH https://github.com/cyberFund/$NAME
