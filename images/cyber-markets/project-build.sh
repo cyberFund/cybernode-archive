@@ -13,13 +13,17 @@ git clone --branch $BRANCH https://github.com/cyberFund/$NAME
 cd $NAME
 HASH="$(git rev-parse --short HEAD)"
 
-./gradlew assemble
+# cyber-markets right now is two components:
+# - connectors
+# - stream-api
+./gradlew installDist
 
-echo --- cp versioned binary into $HOME/bin/ ---
+echo --- cp versioned binaries into $HOME/bin/ ---
 mkdir $HOME/bin
-cd build/libs
-ls -la
- 
+ls -la connectors/build
+tree connectors/build/install
+tree connectors/build/steam-api
+
 # bash way to list files into array
 binaries=($NAME-*.jar)
 binary=${binaries[0]}
