@@ -21,3 +21,10 @@ echo ... creating $IMAGE
 VERSION=`cat $PWD/bin/VERSION`
 docker build --no-cache -t $IMAGE --label version="$VERSION" . | tee buildfinal.log
 cd -
+
+echo
+echo FAIL
+echo cyber-market builds are made in Circle CI for now, deal with it later
+echo https://github.com/cyberFund/cybernode/issues/87
+exit 1
+
