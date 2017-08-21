@@ -16,17 +16,35 @@ HASH="$(git rev-parse --short HEAD)"
 # cyber-markets right now is two components:
 # - connectors
 # - stream-api
-./gradlew installDist
+#./gradlew installDist
+./gradlew assemble
 
-echo --- cp versioned binaries into $HOME/bin/ ---
+echo --- cp binaries into $HOME/bin/ ---
 mkdir $HOME/bin
-ls -laR connectors/build/install
-ls -laR stream-api/build/install
+ls -laR connectors/build/libs
+ls -laR stream-api/build/libs
 
-# bash way to list files into array
-binaries=($NAME-*.jar)
-binary=${binaries[0]}
-cp $binary $HOME/bin/$NAME.jar
+
+# this was used to get versioned file name
+# of Java package, such as cyber-markets-1.0.jar
+#
+#function first_file {
+#  # return first found file from the mask
+#
+#  # bash way to list files into array
+#  list=($1)
+#  first=${list[0]}
+#  echo $first
+#}
+#
+#first_file "$NAME-*.jar"
+#binary=$(first_file "$NAME-*.jar")
+
+
+cp connectors/build/libs/connectors.jar $HOME/bin/
+cp stream-api/build/libs/stream-api.jar $HOME/bin/
+
 # record version
 echo "$binary $HASH" > $HOME/bin/VERSION
 ls -la $HOME/bin
+
