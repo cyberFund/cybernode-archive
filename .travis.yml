@@ -6,9 +6,13 @@ services:
 script:
   # chains
   - ./images/build-fullnode-btcd.sh
-  #- ./images/fullnode/build-parity.sh
+  - ./images/fullnode/build-parity.sh
+
   # markets
-  - ./images/build-markets.sh
+  #cyber-markets images are assembled in CircleCI
+  #- ./images/build-markets.sh
 
 after_script:
+  # sanity tests
   - ./images/run-fullnode-btcd.sh --version
+
