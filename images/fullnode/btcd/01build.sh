@@ -26,15 +26,16 @@ fi
 cd $GOPATH/src/github.com/btcsuite/btcd
 git checkout $BTCDHASH
 # record revision
-touch $GOPATH/bin/VERSION
-echo "btcd-revision: `git rev-parse HEAD`" >> $GOPATH/bin/VERSION
+REVISION=`git rev-parse --short=8 HEAD`
+echo "v`date +%Y-%m-%d`-$REVISION" >> $GOPATH/bin/TAG
+echo "btcd-revision: $REVISION" >> $GOPATH/bin/VERSION
 
 echo --- applying patches ---
 git -c user.name='cyber' -c user.email='cyber@build' am $DIR/02notls.patch
-echo "patch-revision: `git rev-parse HEAD`" >> $GOPATH/bin/VERSION
+echo "patch-revision: `git rev-parse --short=8 HEAD`" >> $GOPATH/bin/VERSION
 
 git -c user.name='cyber' -c user.email='cyber@build' am $DIR/03getblockbynumber.patch
-echo "patch-revision: `git rev-parse HEAD`" >> $GOPATH/bin/VERSION
+echo "patch-revision: `git rev-parse --short=8 HEAD`" >> $GOPATH/bin/VERSION
 
 echo --- fetch dependencies into vendor/ ---
 $GOPATH/bin/glide install
