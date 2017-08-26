@@ -1,3 +1,18 @@
+### tl;dr
+
+From `images/` subdir in repository run:
+
+    CYBERDATA=/datadir ./run-fullnode-btcd.sh
+
+ * executes `cybernode/bitcoin-btcd`
+ * JSON-RPC at http://cyber:cyber@127.0.0.1:8334
+ * blockchain data stored in `/datadir`
+
+Building `cybernode/bitcoin-btcd`:
+
+    ./build-fullnode-btcd.sh
+
+
 ### btcd setup
 
 `btcd` lacks single BTCDHOME setting to root its data
