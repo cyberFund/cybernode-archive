@@ -11,6 +11,7 @@ script:
   # markets
   #cyber-markets images are assembled in CircleCI
   #- ./images/build-markets.sh
+  - ./images/build-markets-app.sh
 
 after_script:
   # sanity tests
