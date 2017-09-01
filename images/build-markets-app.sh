@@ -33,7 +33,9 @@ fi
 if [ "$CLONE" == "yes" ]; then
   git clone https://github.com/cyberFund/cyber-markets
 fi
-git -C cyber-markets rev-parse --short=8 HEAD > VERSION
+REVISION=`git -C cyber-markets rev-parse --short=8 HEAD`
+TAG="v`date +%Y%m%d`-$REVISION"
+echo $TAG > VERSION
 
 # extracting static webapp pages
 cp cyber-markets/stream-api/src/main/resources/*.html .
@@ -49,5 +51,6 @@ echo "<div><a href='orders-test.html'>Orders</a></div>" >> index.html
 VERSION=`cat $PWD/VERSION`
 
 docker build --no-cache -t cybernode/$IMAGE --label version="$VERSION" .. | tee buildfinal.log
+docker tag cybernode/$IMAGE:latest cybernode/$IMAGE:$VERSION
 cd -
 
