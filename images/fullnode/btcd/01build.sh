@@ -27,7 +27,7 @@ cd $GOPATH/src/github.com/btcsuite/btcd
 git checkout $BTCDHASH
 # record revision
 REVISION=`git rev-parse --short=8 HEAD`
-echo "v`date +%Y-%m-%d`-$REVISION" >> $GOPATH/bin/TAG
+echo "v`date +%Y%m%d`-$REVISION" >> $GOPATH/bin/TAG
 echo "btcd-revision: $REVISION" >> $GOPATH/bin/VERSION
 
 echo --- applying patches ---
