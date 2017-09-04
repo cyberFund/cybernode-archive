@@ -6,7 +6,7 @@ echo ...Starting k8s cluster...
 # [ ] minikube - choose different virt driver on MacOS
 minikube start --vm-driver=kvm
 
-echo ...Run replicationcontroller for markets container...
+echo ...Create ReplicaSet for markets container...
 echo "(running cm-app container on cluster)"
 kubectl run kubermarkets --image=cybernode/cm-app --port=80
 
@@ -15,7 +15,7 @@ kubectl run kubermarkets --image=cybernode/cm-app --port=80
 #     (alter default --pod-running-timeout for non-attached run)
 #     using custom bash instead
 while [[ -z `kubectl get pods -o name` ]]; do
-  echo Waiting for replication controller to start Pod
+  echo Waiting for ReplicaSet to appear and start Pod
   sleep 0.7
 done
 
