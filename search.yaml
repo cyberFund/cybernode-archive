@@ -1,0 +1,28 @@
+# Source configuration
+# https://github.com/cyberFund/cyber-markets/blob/development/devops/local-elassandra/docker-compose.yml
+#
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: chainvisor
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: storage
+    spec:
+      containers:
+      - name: elassandra
+        image: strapdata/elassandra:2.4.5.5
+        env:
+        - name: CASSANDRA_DC
+          value: PRODUCTION
+        - name: CASSANDRA_CLUSTER_NAME
+          value: CYBERNODE
+        ports:
+        #    9042: CQL
+        #    9200: ElasticSearch HTTP
+        - containerPort: 9042
+        - containerPort: 9200
+
