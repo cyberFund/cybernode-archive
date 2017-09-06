@@ -13,6 +13,12 @@ spec:
         run: storage
         app: elassandra
     spec:
+      volumes:
+      - name: elassandra-db-volume
+        # [ ] make it persistent even when Pod dies
+        #persistentVolumeClaim:
+        #  claimName: elassandra-pv-claim
+        emptyDir: {}
       containers:
       - name: elassandra
         image: strapdata/elassandra:2.4.5.5
@@ -26,6 +32,9 @@ spec:
         #    9200: ElasticSearch HTTP
         - containerPort: 9042
         - containerPort: 9200
+        volumeMounts:
+        - mountPath: /var/lib/cassandra
+          name: elassandra-db-volume
 ---
 apiVersion: v1
 kind: Service
