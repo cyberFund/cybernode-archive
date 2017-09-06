@@ -11,6 +11,7 @@ spec:
     metadata:
       labels:
         run: storage
+        app: elassandra
     spec:
       containers:
       - name: elassandra
@@ -25,4 +26,17 @@ spec:
         #    9200: ElasticSearch HTTP
         - containerPort: 9042
         - containerPort: 9200
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elassandra
+spec:
+  ports:
+  - port: 9042
+    name: cql
+  - port: 9200
+    name: elastic
+  selector:
+    app: elassandra
 
