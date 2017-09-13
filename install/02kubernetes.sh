@@ -13,7 +13,10 @@ curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s htt
 
 if [ $ID = "ubuntu" ]; then
     BIN=docker-machine-driver-kvm
-    echo Fetching $BIN for $NAME
+    echo ..installing $BIN for $NAME
+    sudo apt -y install libvirt-bin qemu-kvm
     curl -Lo $BIN https://github.com/dhiltgen/docker-machine-kvm/releases/download/v0.10.0/docker-machine-driver-kvm-ubuntu16.04 && chmod +x $BIN && sudo mv $BIN /usr/local/bin/
+    echo ..adding $USER to group 'libvirt'
+    sudo usermod -a -G libvirt $(whoami)
 fi
 
