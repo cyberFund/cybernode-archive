@@ -54,7 +54,8 @@ echo 1.20.0 > $CLONEDIR/rust-toolchain
 # https://github.com/rust-lang-nursery/docker-rust/blob/bf30ee63/1.20.0/stretch/Dockerfile
 CACHEVOL="-v $CACHE:/usr/local/cargo"
 
-docker run --rm --user "$(id -u)":"$(id -g)" -v $CLONEDIR:/build -w /build rust:1.20-stretch cargo build --release
+COMMAND="apt-get update && apt-get -y install libudev-dev && cargo build --release"
+docker run --rm --user "$(id -u)":"$(id -g)" -v $CLONEDIR:/build -w /build rust:1.20-stretch /bin/bash -c "$COMMAND"
 
 #docker build --no-cache $CACHEVOL -t ${IMAGE}-build -f Dockerfile-build . | tee buildimage.log
 #docker run --rm -v $BINDIR:/build ${IMAGE}-build | tee buildimage-run.log
