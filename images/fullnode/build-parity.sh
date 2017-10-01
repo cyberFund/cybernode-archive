@@ -58,9 +58,14 @@ docker run --rm $CACHEVOL -v $CLONEDIR:/build -w /build rust:1.20-stretch /bin/b
 
 #docker build --no-cache $CACHEVOL -t ${IMAGE}-build -f Dockerfile-build . | tee buildimage.log
 #docker run --rm -v $BINDIR:/build ${IMAGE}-build | tee buildimage-run.log
-#echo ... built btcd binaries:
-#ls -la $BINDIR
-#echo ... creating ${IMAGE} image
-#VERSION=`cat $BINDIR/VERSION`
-#docker build --no-cache -t ${IMAGE} --label version="$VERSION" . | tee buildfinal.log
-#cd -
+
+echo ... built $IMAGE binaries:
+ls -la $BUILDDIR
+ls -la $CLONEDIR
+ls -la $CLONEDIR/target
+ls -la $CLONEDIR/target/release
+echo ... creating ${IMAGE} image
+VERSION=`cat $BUILDDIR/VERSION`
+docker build --no-cache -t ${IMAGE} --label version="$VERSION" . | tee buildfinal.log
+cd -
+
