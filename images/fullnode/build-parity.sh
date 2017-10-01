@@ -62,7 +62,7 @@ ls -la $CLONEDIR
 ls -la $CLONEDIR/target
 ls -la $CLONEDIR/target/release
 mkdir $BUILDDIR/bin
-cp --verbose $CLONEDIR/target/release/* $BUILDDIR/bin
+cp --verbose -r $CLONEDIR/target/release/* $BUILDDIR/bin
 echo ... creating ${IMAGE} image
 VERSION=`cat $BUILDDIR/VERSION`
 docker build --no-cache -t ${IMAGE} --label version="$VERSION" -f ../Dockerfile | tee buildfinal.log
