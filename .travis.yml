@@ -1,6 +1,6 @@
 language: generic
 cache:
-  - ./images/fullnode/parity/.cache
+  - ./images/fullnode/parity/_build/.cache
 
 services:
   - docker
