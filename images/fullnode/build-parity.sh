@@ -52,10 +52,9 @@ echo Patch Rust toolchain version for repeatable builds
 echo 1.20.0 > $CLONEDIR/rust-toolchain
 
 # https://github.com/rust-lang-nursery/docker-rust/blob/bf30ee63/1.20.0/stretch/Dockerfile
-CACHEVOL="-v $CACHE:/usr/local/cargo"
-
-COMMAND="apt-get update && apt-get -y install libudev-dev && cargo build --release"
-docker run --rm $CACHEVOL -v $CLONEDIR:/build -w /build rust:1.20-stretch /bin/bash -c "$COMMAND"
+CACHEVOL="-v $CACHE:/build/.cargo"
+COMMAND="apt-get update && apt-get -y install libudev-dev && CARGO_HOME=/build/.cargo cargo build --release"
+docker run --rm $CACHEVOL -v $CLONEDIR:/build -w /build rust:1.20-stretch /bin/bash -c "$COMMAND" | tee buildimage-run.log
 
 #docker build --no-cache $CACHEVOL -t ${IMAGE}-build -f Dockerfile-build . | tee buildimage.log
 #docker run --rm -v $BINDIR:/build ${IMAGE}-build | tee buildimage-run.log
