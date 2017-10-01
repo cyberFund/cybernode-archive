@@ -1,6 +1,6 @@
 FROM scratch
 
-ADD target/release/parity /cyberapp/
+ADD bin/* /cyberapp/
 VOLUME /cyberdata
 
 
