@@ -55,7 +55,9 @@ echo 1.20.0 > $CLONEDIR/rust-toolchain
 CACHEVOL="-v $CACHE:/build/.cargo"
 COMMAND="apt-get update && apt-get -y install libudev-dev && CARGO_HOME=/build/.cargo cargo build --release"
 docker run --rm $CACHEVOL -v $CLONEDIR:/build -w /build rust:1.20-stretch /bin/bash -c "$COMMAND" | tee buildimage-run.log
+cd -
 
+# Now back to dir with Dockerfile
 echo ... built $IMAGE binaries:
 ls -la $BUILDDIR
 ls -la $CLONEDIR
@@ -65,6 +67,5 @@ mkdir $BUILDDIR/bin
 cp --verbose -r $CLONEDIR/target/release/* $BUILDDIR/bin
 echo ... creating ${IMAGE} image
 VERSION=`cat $BUILDDIR/VERSION`
-docker build --no-cache -t ${IMAGE} --label version="$VERSION" -f ../Dockerfile . | tee buildfinal.log
-cd -
+docker build --no-cache -t ${IMAGE} --label version="$VERSION" . | tee buildfinal.log
 
