@@ -71,7 +71,7 @@ ls -la $BUILDDIR
 ls -la $CLONEDIR
 ls -la $CLONEDIR/target
 ls -la $CLONEDIR/target/release
-mkdir $BUILDDIR/bin
+mkdir -p $BUILDDIR/bin
 cp -r $CLONEDIR/target/release/* $BUILDDIR/bin
 echo ... creating ${IMAGE} image
 VERSION=`cat $BUILDDIR/VERSION`

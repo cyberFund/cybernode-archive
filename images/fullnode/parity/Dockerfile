@@ -1,6 +1,6 @@
 FROM scratch
 
-ADD bin/* /cyberapp/
+ADD _build/bin/parity /cyberapp/
 VOLUME /cyberdata
 
 
