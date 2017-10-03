@@ -59,7 +59,7 @@ docker run --name build-$IMAGE-tmp rust:1.20-stretch bash -c "apt-get update && 
 docker commit build-$IMAGE-tmp build-$IMAGE
 
 CACHEVOL="-v $CACHE:/build/.cargo"
-COMMAND="apt-get update && apt-get -y install libudev-dev && CARGO_HOME=/build/.cargo cargo build --release"
+COMMAND="CARGO_HOME=/build/.cargo cargo build --release"
 docker run --rm --user "$(id -u)":"$(id -g)" $CACHEVOL -v $CLONEDIR:/build -w /build build-$IMAGE /bin/bash -c "$COMMAND" | tee buildimage-run.log
 
 
