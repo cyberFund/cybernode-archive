@@ -51,10 +51,16 @@ echo Patch Rust toolchain version for repeatable builds
 # https://github.com/rust-lang-nursery/docker-rust/issues/8
 echo 1.20.0 > $CLONEDIR/rust-toolchain
 
-# https://github.com/rust-lang-nursery/docker-rust/blob/bf30ee63/1.20.0/stretch/Dockerfile
+
+# Build new build image with libudev-dev, which is not included upstream
+# https://github.com/rust-lang-nursery/docker-rust/blob/master/1.20.0/stretch/Dockerfile
+# https://github.com/docker-library/buildpack-deps/pull/67
+docker run --name build-$IMAGE-tmp rust:1.20-stretch bash -c "apt-get update && apt-get -y install libudev-dev"
+docker commit build-$IMAGE-tmp build-$IMAGE
+
 CACHEVOL="-v $CACHE:/build/.cargo"
 COMMAND="apt-get update && apt-get -y install libudev-dev && CARGO_HOME=/build/.cargo cargo build --release"
-docker run --rm $CACHEVOL -v $CLONEDIR:/build -w /build rust:1.20-stretch /bin/bash -c "$COMMAND" | tee buildimage-run.log
+docker run --rm $CACHEVOL -v $CLONEDIR:/build -w /build build-$IMAGE /bin/bash -c "$COMMAND" | tee buildimage-run.log
 
 
 # Now back to dir with Dockerfile, because Docker is unable to use
