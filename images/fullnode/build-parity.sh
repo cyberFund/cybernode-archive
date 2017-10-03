@@ -60,7 +60,7 @@ docker commit build-$IMAGE-tmp build-$IMAGE
 
 CACHEVOL="-v $CACHE:/build/.cargo"
 COMMAND="apt-get update && apt-get -y install libudev-dev && CARGO_HOME=/build/.cargo cargo build --release"
-docker run --rm $CACHEVOL -v $CLONEDIR:/build -w /build build-$IMAGE /bin/bash -c "$COMMAND" | tee buildimage-run.log
+docker run --rm --user "$(id -u)":"$(id -g)" $CACHEVOL -v $CLONEDIR:/build -w /build build-$IMAGE /bin/bash -c "$COMMAND" | tee buildimage-run.log
 
 
 # Now back to dir with Dockerfile, because Docker is unable to use
