@@ -6,7 +6,8 @@ language: generic
 env:
   # chains
   - SCRIPT=./images/build-fullnode-btcd.sh
-  - SCRIPT=./fullnode/build-parity.sh
+    TEST=./images/run-fullnode-btcd.sh --version
+  - SCRIPT=./images/fullnode/build-parity.sh
   # markets
   #cyber-markets images are assembled in CircleCI
   #- ./images/build-markets.sh
@@ -23,6 +24,5 @@ script:
   - $SCRIPT
 
 after_script:
-  # sanity tests
-  - ./images/run-fullnode-btcd.sh --version
+  - $TEST
 
