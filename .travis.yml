@@ -1,4 +1,18 @@
 language: generic
+
+
+# setting build matrix through duplicate env
+# for parallel build
+env:
+  # chains
+  - SCRIPT=./images/build-fullnode-btcd.sh
+  - SCRIPT=./fullnode/build-parity.sh
+  # markets
+  #cyber-markets images are assembled in CircleCI
+  #- ./images/build-markets.sh
+  - ./images/build-markets-app.sh
+
+
 cache:
   - ./images/fullnode/parity/_build/.cache
 
@@ -6,14 +20,7 @@ services:
   - docker
 
 script:
-  # chains
-  - ./images/build-fullnode-btcd.sh
-  - ./images/fullnode/build-parity.sh
-
-  # markets
-  #cyber-markets images are assembled in CircleCI
-  #- ./images/build-markets.sh
-  - ./images/build-markets-app.sh
+  - $SCRIPT
 
 after_script:
   # sanity tests
