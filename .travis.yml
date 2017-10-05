@@ -8,6 +8,7 @@ env:
   - SCRIPT=./images/build-fullnode-btcd.sh
     TEST=./images/run-fullnode-btcd.sh --version
   - SCRIPT=./images/fullnode/build-parity.sh
+    TEST=
   # markets
   #cyber-markets images are assembled in CircleCI
   #- ./images/build-markets.sh

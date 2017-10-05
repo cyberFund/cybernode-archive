@@ -41,7 +41,7 @@ if [ -d $CLONEDIR ] ; then
 fi
 
 if [ "$CLONE" == "yes" ]; then
-  git clone https://github.com/paritytech/parity $CLONEDIR
+  git clone --depth=100 https://github.com/paritytech/parity $CLONEDIR
 fi
 REVISION=`git -C $CLONEDIR rev-parse --short=8 HEAD`
 TAG="v`date +%Y%m%d`-$REVISION"
