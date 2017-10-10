@@ -7,7 +7,7 @@ env:
   # chains
   - SCRIPT=./images/build-fullnode-btcd.sh
     TEST=./images/run-fullnode-btcd.sh --version
-  - SCRIPT=travis_wait ./images/fullnode/build-parity.sh
+  - SCRIPT="travis_wait ./images/fullnode/build-parity.sh"
     TEST=
   # markets
   #cyber-markets images are assembled in CircleCI
