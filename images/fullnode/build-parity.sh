@@ -55,8 +55,11 @@ echo 1.20.0 > $CLONEDIR/rust-toolchain
 # Build new build image with libudev-dev, which is not included upstream
 # https://github.com/rust-lang-nursery/docker-rust/blob/master/1.20.0/stretch/Dockerfile
 # https://github.com/docker-library/buildpack-deps/pull/67
-docker run --name build-$IMAGE-tmp rust:1.20-stretch bash -c "apt-get update && apt-get -y install libudev-dev"
-docker commit build-$IMAGE-tmp build-$IMAGE
+docker build --no-cache -t build-${IMAGE} -f Dockerfile-build .
+
+#docker run --name build-$IMAGE-tmp rust:1.20-stretch bash -c "apt-get update && apt-get -y install libudev-dev"
+#docker commit build-$IMAGE-tmp build-$IMAGE
+#docker rm build-$IMAGE-tmp
 
 CACHEVOL="-v $CACHE:/build/.cargo"
 COMMAND="CARGO_HOME=/build/.cargo cargo build --release"
