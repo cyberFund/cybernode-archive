@@ -51,6 +51,10 @@ echo Patch Rust toolchain version for repeatable builds
 # https://github.com/rust-lang-nursery/docker-rust/issues/8
 echo 1.20.0 > $CLONEDIR/rust-toolchain
 
+# Back to dir with Dockerfile, because Docker is unable to use
+# it from subdirectory
+cd ..
+
 
 # Build new build image with libudev-dev, which is not included upstream
 # https://github.com/rust-lang-nursery/docker-rust/blob/master/1.20.0/stretch/Dockerfile
@@ -66,9 +70,6 @@ COMMAND="CARGO_HOME=/build/.cargo cargo build --release"
 docker run --rm --user "$(id -u)":"$(id -g)" $CACHEVOL -v $CLONEDIR:/build -w /build build-$IMAGE /bin/bash -c "$COMMAND" | tee buildimage-run.log
 
 
-# Now back to dir with Dockerfile, because Docker is unable to use
-# it from subdirectory
-cd ..
 echo ... built $IMAGE binaries:
 ls -la $BUILDDIR
 ls -la $CLONEDIR
