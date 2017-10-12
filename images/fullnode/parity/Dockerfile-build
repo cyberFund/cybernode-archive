@@ -1,19 +1,17 @@
-FROM buildpack-deps:jessie-scm
-
-# install Rust
-# `sh -s -- -y` passes -y parameter to piped script
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
-ENV PATH $PATH:/root/.cargo/bin
+FROM rust:1.20-stretch
 
 # install Parity build dependencies
 # https://github.com/paritytech/parity#build-dependencies
-RUN apt-get -y update && apt-get -y install gcc g++ pkg-config libudev-dev make libssl-dev
+RUN apt-get -y update && apt-get -y install libudev-dev
 
 # build Parity from source
-COPY 01build.sh .
-RUN bash 01build.sh
-
-VOLUME /build
-
-# run time copy built binaries to provided /build volume
-CMD cp --verbose ./target/release/* /build
+#--- commented block builds by fetching sources from container
+#COPY 01build.sh .
+#RUN bash 01build.sh
+#
+#VOLUME /build
+#
+## run time copy built binaries to provided /build volume
+#CMD cp --verbose ./target/release/* /build
+#---
+#
