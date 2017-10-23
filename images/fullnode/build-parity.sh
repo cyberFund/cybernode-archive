@@ -8,6 +8,7 @@ set -o pipefail
 set -x
 
 
+RUST=0.21.0
 IMAGE=ethereum-parity
 REPO=https://github.com/paritytech/parity
 
@@ -49,7 +50,7 @@ echo $TAG > VERSION
 
 echo Patch Rust toolchain version for repeatable builds
 # https://github.com/rust-lang-nursery/docker-rust/issues/8
-echo 1.20.0 > $CLONEDIR/rust-toolchain
+echo $RUST > $CLONEDIR/rust-toolchain
 
 # Back to dir with Dockerfile, because Docker is unable to use
 # it from subdirectory
