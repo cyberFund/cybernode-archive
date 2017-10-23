@@ -1,25 +1,109 @@
-*Build scripts for `cybernode` images*
+*`cybernode` build system*
+
+It builds images for components that are later executed
+for different `cybernode` types.
 
 ### TL;DR
 
-Use `./build-*.sh` scripts to build and pack binaries
-into Docker images. Use `./run-*.sh` scripts to execute
-images.
+`./build-*.sh` scripts build components that are stored in
+external repositories. They are packed into Docker images.
 
-For debugging, binaries are extracted to `bin/` subdir of
-image sources. Images that end in `-build` are used for
-building process itself and can be removed.
+`./run-*.sh` scripts to execute those images.
 
-### Common operations
+### Source layout convention
 
-Check version of image software (`btcd` for example):
+There is a separate directory for every component and a
+build script next to it. Directory name matches the name
+of resulting image. Files for `cybernode/ethereum-parity`
+([DockerHub](https://hub.docker.com/r/cybernode/ethereum-parity/))
 
-    docker inspect --format='{{.Config.Labels.version}}' btcd
+    fullnode/
+      ethereum-parity/
+        README.md
+        Dockerfile
+        Dockerfile-build
+      build-parity.sh
 
-Check image command and parameters:
+`README.md` contains human-friendly description what is
+provided by component and how to use it, and machine-
+readable specification if ports and default run command.
 
-    docker inspect --format='{{.Config.Entrypoint}}' btcd
+Build process takes place inside `ethereum-parity/` and
+creates additional dirs.
 
+    fullnode/
+      ethereum-parity/
+        _build/
+        _cyberapp/
+
+`_build/` is where clone, compilation and assembly take
+place. `_cyberapp/` is where resulting binaries are
+copied before being packed into final image.
+
+    ...
+        _cyberapp/
+          README.md
+          TAG
+          parity
+
+`parity` is the binary to be packed. `TAG` is a label
+for the image with format `vYYYYMMDD-REVISION`.
+
+### Build process
+
+1. A `build image` is created from `Dockerfile-build`
+2. The image is labeled with `build-` prefix
+3. Build script creates `_build/` subdir and clones
+component sources into it
+4. The `build image` is executed from source dir to
+compile component sources
+5. Build script then creates `_cyberapp/` dir, copies
+resulting binaries into it and creates `TAG` file
+6. `Dockerfile` is used to pack binaries
+
+### Image format convention
+
+1. Single binary executable per container
+2. Containers are read-only
+
+We are not there yet.
+
+Image layout
+
+    /cyberapp
+      README.md
+      TAG
+      parity
+    /cyberdata
+
+`/cyberapp` contains readonly binary and related
+files. `/cyberdata` is mounted for everything that
+should be written - data, logs and configs.
+
+[Image entrypoint](https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/#entrypoint)
+is set to main binary with sane defaults, which are
+documented in `README.md`. Checking what command is
+executed by Docker by default (ENTRYPOINT)
+
+    docker inspect --format='{{.Config.Entrypoint}}' ethereum-parity
+
+Each image also carries **metadata** in custom
+labels. To check tag in `parity` image, use
+
+    docker inspect --format='{{.Config.Labels.tag}}' ethereum-parity
+
+List of labels:
+
+  * `tag` - v20171028-7a29d808
+  * `run` - command for `docker run` to execute
+  container with ports and mounts as described in
+  `README.md` defaults
+  * `ports` - machine-readable speccy pf ports and
+  services provided by container
+
+---
+**The rest of documentation is outdated and need rework**
+---
 
 ### Intro
 
