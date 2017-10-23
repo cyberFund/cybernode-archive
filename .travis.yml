@@ -7,7 +7,7 @@ env:
   # chains
   - SCRIPT=./images/build-fullnode-btcd.sh
     TEST=./images/run-fullnode-btcd.sh --version
-  - SCRIPT="travis_wait 60 ./images/fullnode/build-parity.sh"
+  - SCRIPT=./images/fullnode/build-parity.sh
     TEST=
   # markets
   #cyber-markets images are assembled in CircleCI
@@ -23,6 +23,9 @@ services:
   - docker
 
 script:
+  # ping stdout every 9 minutes or Travis kills build
+  # https://docs.travis-ci.com/user/common-build-problems/#Build-times-out-because-no-output-was-received
+  - while sleep 9m; do echo "=====[ $SECONDS seconds still running ]====="; done &
   - $SCRIPT
 
 after_script:
