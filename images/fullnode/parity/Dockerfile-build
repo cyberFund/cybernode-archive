@@ -1,4 +1,4 @@
-FROM rust:1.20-stretch
+FROM rust:1.21
 
 # install Parity build dependencies
 # https://github.com/paritytech/parity#build-dependencies

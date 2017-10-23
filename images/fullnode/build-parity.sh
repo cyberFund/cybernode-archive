@@ -8,7 +8,7 @@ set -o pipefail
 set -x
 
 
-RUST=0.21.0
+RUST=1.21.0
 IMAGE=ethereum-parity
 REPO=https://github.com/paritytech/parity
 
