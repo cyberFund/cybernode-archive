@@ -16,6 +16,7 @@ env:
 
 
 cache:
+  directories:
   - ./images/fullnode/parity/_build/.cache
 
 services:
