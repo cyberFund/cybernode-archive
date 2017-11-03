@@ -1,7 +1,15 @@
+`cybernode` components can be run separately with scripts
+in `images/` directory, or together as a part of specific
+`cybernode` **type**.
 
-Every VM or physical server of Cybernode is based on
-Ubuntu 16.04 for simplicity. It needs automatic security
-updates and Docker.
+Because each component is packed into container, it can
+be run on own physical servers, or in the cloud, such as
+Google GKE.
+
+Physical server setup is tested with Ubuntu 16.04, which
+is configured with `/install/01bootstrap.sh` script with
+automatic security updates, Docker and few more goodies.
+Docker and updates:
 
     # automatic security updates
     apt-get -y update
@@ -15,13 +23,13 @@ updates and Docker.
     echo >> .bashrc
     echo "source /usr/share/bash-completion/bash_completion" >> .bashrc
 
-Cybernode main user is called `cyber` and its home contains
-base mount point for data gathered from various containers.
-For example, data from `fullnode-btcd` container should be
-mounted at `/home/cyber/cyberdata/fullnode-btcd`.
+`cybernode` containers are run under `cyber` user. Its
+home contains base mount point for container data.
+For example, data from `bitcoin-btcd` container should be
+mounted at `/home/cyber/cyberdata/bitcoin-btcd`.
 
     # create `cyber` user
     adduser cyber --disabled-password --gecos ""
 
-You can read about GECOS fiels [here](https://en.wikipedia.org/wiki/Gecos_field)
-if you want.
+[GECOS docs](https://en.wikipedia.org/wiki/Gecos_field) if
+you're curious.
