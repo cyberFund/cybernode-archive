@@ -1,10 +1,13 @@
+#!/bin/bash
 
 # fail on error
 set -e
+# show commands
+set -x
 
-
-# name of running container
+# name of running container and image
 NAME=btcd
+IMAGE=cybernode/bitcoin-btcd
 
 
 # empty if `cyber` does not exist, set to `cyber` uid otherwise
@@ -30,7 +33,13 @@ if [ -z "$CYBERDATA" ]; then
 fi
 
 
-IMAGE=fullnode-btcd
+# pull image if not exists
+docker inspect $IMAGE || EXIT_CODE=$? && true;
+if [[ $EXIT_CODE != 0 ]]; then
+    docker pull $IMAGE
+fi
+
+
 VERSION=`docker inspect --format='{{.Config.Labels.version}}' $IMAGE`
 
 # -p 8333:8333  - host:container - expose port 8333 as 8333 from host
