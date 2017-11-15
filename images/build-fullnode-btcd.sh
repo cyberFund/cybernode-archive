@@ -5,7 +5,8 @@ set -e
 # set exit code to non-0 if any piped command returns error
 set -o pipefail
 
-IMAGE=fullnode-btcd
+IMAGE=bitcoin-btcd
+BUILDIMAGE=build-$IMAGE
 
 # absolute path to script's directory
 DIR=$(dirname $(readlink -f "$0"))
@@ -18,8 +19,8 @@ BINDIR=$BUILDDIR/bin
 echo "Build Dir:   $BUILDDIR"
 
 cd $BUILDDIR
-docker build --no-cache -t ${IMAGE}-build -f Dockerfile-build . | tee buildimage.log
-docker run --rm -v $BINDIR:/build ${IMAGE}-build | tee buildimage-run.log
+docker build --no-cache -t ${BUILDIMAGE} -f Dockerfile-build . | tee buildimage.log
+docker run --rm -v $BINDIR:/build ${BUILDIMAGE} | tee buildimage-run.log
 echo ... built btcd binaries:
 ls -la $BINDIR
 echo ... creating ${IMAGE} image
