@@ -1,35 +1,36 @@
-`cybernode` components can be run separately with scripts
-in `images/` directory, or together as a part of specific
-`cybernode` **type**.
+### Bootstrapping `cybernode`
 
-Because each component is packed into container, it can
-be run on own physical servers, or in the cloud, such as
-Google GKE.
+Before you can run `cybernode` components, you need to
+prepare your system.
 
-Physical server setup is tested with Ubuntu 16.04, which
-is configured with `/install/01bootstrap.sh` script with
-automatic security updates, Docker and few more goodies.
-Docker and updates:
+`cybernode` components are built and started with scripts
+in `images/` directory. Muliple components can be bundled
+together as a part of specific `cybernode` **type**.
 
-    # automatic security updates
-    apt-get -y update
-    apt-get -y install unattended-upgrades
-    unattended-upgrades -v
-    # check /var/log/unattended-upgrades/unattended-upgrades.log
+Component are packed into containers. This way they can be
+run on own physical servers, or in the cloud, such as
+Google GKE or OpenShift. We use Kubernetes to manage
+containers for cloud installations.
 
-    # Docker
-    apt-get -y install docker.io
-    # enable command auto-completion for non-login shells
-    echo >> .bashrc
-    echo "source /usr/share/bash-completion/bash_completion" >> .bashrc
+##### Bootstrapping your own physical server
 
-`cybernode` containers are run under `cyber` user. Its
-home contains base mount point for container data.
-For example, data from `bitcoin-btcd` container should be
-mounted at `/home/cyber/cyberdata/bitcoin-btcd`.
+Server setup is tested with Ubuntu 16.04. To install
+necessary prerequisites on Ubuntu, run:
 
-    # create `cyber` user
-    adduser cyber --disabled-password --gecos ""
+    ./install/01bootstrap.sh
 
-[GECOS docs](https://en.wikipedia.org/wiki/Gecos_field) if
-you're curious.
+It sets up automatic security updates, Docker and few more
+goodies, like shell completion and version control for
+`/etc` contents.
+
+`cybernode` containers are run under `cyber` user, and
+`/home/cyber/cyberdata`  dir provides root location for
+component data. For example, data from `bitcoin-btcd`
+container will be mounted at `/home/cyber/cyberdata/bitcoin-btcd`.
+
+`01bootstrap.sh` script creates `cyber` user for running
+containers and `cyberbuilder` user for building images and
+pushing them to DockerHub.
+
+See the full scripts here:
+https://github.com/cyberFund/cybernode/blob/master/install/01bootstrap.sh
