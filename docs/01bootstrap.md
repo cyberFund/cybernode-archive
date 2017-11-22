@@ -12,7 +12,7 @@ run on own physical servers, or in the cloud, such as
 Google GKE or OpenShift. We use Kubernetes to manage
 containers for cloud installations.
 
-##### Bootstrapping your own physical server
+#### Bootstrapping your own physical server
 
 Server setup is tested with Ubuntu 16.04. To install
 necessary prerequisites on Ubuntu, run:
