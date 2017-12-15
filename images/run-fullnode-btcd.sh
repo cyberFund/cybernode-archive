@@ -24,7 +24,7 @@ fi
 # if /cyberdata does not exist
 if [ -z "$CYBERDATA" ]; then
   if [ -z "$CYBER" ]; then
-    echo "Error: set CYBERDATA to store `btcd` blockchain (150Gb+)."
+    echo "Error: set CYBERDATA to store 'btcd' blockchain (150Gb+)."
     echo "       Make sure to use separate partition from your root"
     echo "       to avoid filling system disk and locking your system."
     exit 1
