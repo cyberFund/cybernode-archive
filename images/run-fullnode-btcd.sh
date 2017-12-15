@@ -44,8 +44,7 @@ fi
 
 
 # pull image if not exists
-docker inspect $IMAGE || EXIT_CODE=$? && true;
-if [[ $EXIT_CODE != 0 ]]; then
+if [[ "$(docker images -q $IMAGE)" == "" ]]; then
     docker pull $IMAGE
 fi
 
