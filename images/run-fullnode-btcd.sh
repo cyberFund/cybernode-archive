@@ -20,6 +20,7 @@ else
   RUNUSER="-u $CYBER"
 fi
 
+
 # if /cyberdata does not exist
 if [ -z "$CYBERDATA" ]; then
   if [ -z "$CYBER" ]; then
@@ -30,6 +31,15 @@ if [ -z "$CYBERDATA" ]; then
   else
     CYBERDATA=/home/cyber/cyberdata/$NAME
   fi
+fi
+
+VOLUMEMOUNT=$CYBERDATA:/cyberdata
+# RedHat/Fedora come with SELINUX, which needs workaround for Docker
+if [[ `getenforce` == "Enforcing" ]]; then
+  echo "SELINUX is enabled, adding :z suffix to mounts"
+  # :z marks volume to be accessible by all containers
+  # :Z could be used to isolate access to a single container
+  VOLUMEMOUNT=$VOLUMEMOUNT:z
 fi
 
 
@@ -50,7 +60,7 @@ PORTS="-p 8333:8333 -p 127.0.0.1:8334:8334"
 echo ... starting $NAME $VERSION from $IMAGE
 #ARGS=-d debug
 ARGS="--rpcuser=cyber --rpcpass=cyber --rpclisten=0.0.0.0:8334 --notls"
-docker run -d --restart always --name $NAME $RUNUSER $PORTS -v $CYBERDATA:/cyberdata $IMAGE $ARGS $*
+docker run -d --restart always --name $NAME $RUNUSER $PORTS -v $VOLUMEMOUNT $IMAGE $ARGS $*
 #    -d                  - run as daemon
 #    --restart always    - when to restart container
 #    --name btcd         - just convenient name to find running container
