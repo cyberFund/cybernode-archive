@@ -6,7 +6,7 @@ set -e
 set -x
 
 # name of running container and image
-NAME=btcd
+NAME=bitcoin-btcd
 IMAGE=cybernode/bitcoin-btcd
 
 
