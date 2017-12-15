@@ -5,7 +5,7 @@ set -e
 # set exit code to non-0 if any piped command returns error
 set -o pipefail
 
-IMAGE=bitcoin-btcd
+IMAGE=cybernode/bitcoin-btcd
 BUILDIMAGE=build-$IMAGE
 
 # absolute path to script's directory
