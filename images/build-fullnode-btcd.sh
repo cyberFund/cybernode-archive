@@ -15,12 +15,22 @@ echo [build] ---- building Bitcoin fullnode based on btcd ----
 
 BUILDDIR="$DIR"/fullnode/btcd
 BINDIR=$BUILDDIR/bin
+BUILDMOUNT=$BINDIR:/build
+
+# SELINUX on RedHat/Fedora needs workaround for Docker volumes
+if [[ `getenforce` == "Enforcing" ]]; then
+  echo "SELINUX is enabled, adding :z suffix to mounts"
+  # :z marks volume to be accessible by all containers
+  # :Z could be used to isolate access to a single container
+  BUILDMOUNT=$BUILDMOUNT:z
+fi
+
 
 echo "Build Dir:   $BUILDDIR"
 
 cd $BUILDDIR
 docker build --no-cache -t ${BUILDIMAGE} -f Dockerfile-build . | tee buildimage.log
-docker run --rm -v $BINDIR:/build ${BUILDIMAGE} | tee buildimage-run.log
+docker run --rm -v $BUILDMOUNT ${BUILDIMAGE} | tee buildimage-run.log
 echo ... built btcd binaries:
 ls -la $BINDIR
 echo ... creating ${IMAGE} image
