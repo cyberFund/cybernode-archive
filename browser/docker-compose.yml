@@ -6,7 +6,7 @@ services:
     ports:
       - 32500:80
     environment:
-       CYBER_CHAINGEAR_API: http://93.125.26.210:32600
-       CYBER_SEARCH_API: http://api.search.cyber.fund
-       CYBER_MARKETS_API: http://93.125.26.210:32800
-       CYBER_MARKETS_STREAM_API: ws://93.125.26.210:32801
+       CYBER_CHAINGEAR_API: http://chaingear-api:32600
+       CYBER_SEARCH_API: http://cs-search-api:10300
+       CYBER_MARKETS_API: http://cm-rest-api:32800
+       CYBER_MARKETS_STREAM_API: ws://cm-stream-api:32801
