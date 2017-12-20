@@ -46,7 +46,7 @@ services:
     container_name: pump-etc
     image: cybernode/cs-chain-pumps:latest
     restart: on-failure
-   environment:
+    environment:
       CS_CHAINS_TO_PUMP: ETHEREUM_CLASSIC
       PARITY_ETC_URL: http://parity_etc:18545
       CASSANDRA_HOSTS: elassandra
