@@ -62,3 +62,8 @@ services:
       CASSANDRA_HOSTS: elassandra
       KAFKA_BROKERS: kafka:9092
       CS_LOG_LEVEL: INFO
+
+networks:
+    default:
+        external:
+            name: staging_default

@@ -6,6 +6,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 git pull
 
+docker network create staging_default
+
 export COMPOSE_FILE="$DIR/elassandra/docker-compose.yml"
 docker-compose pull
 docker-compose up -d

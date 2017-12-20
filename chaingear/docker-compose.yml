@@ -7,3 +7,8 @@ services:
       - 32600:8090
     environment:
       ADV_HOST: chaingear-api
+
+networks:
+    default:
+        external:
+            name: staging_default

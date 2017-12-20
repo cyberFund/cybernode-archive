@@ -49,3 +49,8 @@ services:
     command: -Dpidfile.path=/dev/null
     ports:
       - 9000:9000
+
+networks:
+    default:
+        external:
+            name: staging_default

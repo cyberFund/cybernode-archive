@@ -15,3 +15,8 @@ services:
       - "9042:9042"
       - "9200:9200"
       - "9300:9300"
+
+networks:
+    default:
+        external:
+            name: staging_default
