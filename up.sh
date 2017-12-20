@@ -9,6 +9,7 @@ git pull
 export COMPOSE_FILE="$DIR/elassandra/docker-compose.yml"
 docker-compose pull
 docker-compose up -d
+sleep 10
 
 export COMPOSE_FILE="$DIR/kafka/docker-compose.yml"
 docker-compose pull
@@ -26,6 +27,7 @@ docker-compose up -d
 export COMPOSE_FILE="$DIR/markets/docker-compose.yml"
 docker-compose pull
 docker-compose up -d
+sleep 10
 
 export COMPOSE_FILE="$DIR/search/docker-compose.yml"
 docker-compose pull
