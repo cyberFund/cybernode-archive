@@ -1,0 +1,11 @@
+version: '3.3'
+services:
+
+  cyber-ui:
+    image: cybernode/cui-browser:latest
+    ports:
+      - 32500:80
+    environment:
+       CYBER_CHAINGEAR_API: http://127.0.0.1:32600
+       CYBER_SEARCH_API: http://127.0.0.1:32700
+       CYBER_MARKETS_API: http://127.0.0.1:32800
