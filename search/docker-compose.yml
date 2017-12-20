@@ -46,7 +46,7 @@ services:
   cs-search-api:
     container_name: search-api
     ports:
-      - 32900:10300
+      - 32901:10300
     image: cybernode/cs-search-api:latest
     restart: unless-stopped
     environment:
