@@ -27,6 +27,9 @@ script:
   # https://docs.travis-ci.com/user/common-build-problems/#Build-times-out-because-no-output-was-received
   - while sleep 9m; do echo "=====[ $SECONDS seconds still running ]====="; done &
   - $SCRIPT
+  - jobs
+  # kill background echo loop
+  - kill %1
 
 after_script:
   - $TEST
