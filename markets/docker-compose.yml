@@ -19,7 +19,7 @@ services:
       kompose.service.type: loadbalancer
     restart: always
     environment:
-      CASSANDRA_HOSTS: elassandra
+      CASSANDRA_HOSTS: elassandra2
       CASSANDRA_PORT: 9042
       CORS_ALLOWED_ORIGINS: "*"
 
@@ -29,7 +29,7 @@ services:
     restart: always
     environment:
       KAFKA_CONNECTION: kafka:9092
-      CASSANDRA_HOSTS: elassandra
+      CASSANDRA_HOSTS: elassandra2
       CASSANDRA_PORT: 9042
       DEBUG: "false"
 
