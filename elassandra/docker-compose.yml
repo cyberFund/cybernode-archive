@@ -15,6 +15,21 @@ services:
       - "9042:9042"
       - "9200:9200"
       - "9300:9300"
+      
+  elassandra2:
+    container_name: elassandra2
+    image: strapdata/elassandra:5.5.0.8
+    restart: always
+    volumes:
+      - /cyberdata/staging/elassandra2/lib:/var/lib/cassandra
+      - /cyberdata/staging/elassandra2/log:/var/log/cassandra
+    environment:
+      CASSANDRA_DC: DEVELOPMENT
+      CASSANDRA_CLUSTER_NAME: CYBER_MARKETS
+    ports:
+      - "9043:9042"
+      - "9201:9200"
+      - "9301:9300"
 
 networks:
     default:
