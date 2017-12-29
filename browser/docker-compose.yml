@@ -3,6 +3,7 @@ services:
 
   cyber-ui:
     image: cybernode/cui-browser:latest
+    restart: unless-stopped
     ports:
       - 32500:80
     environment:

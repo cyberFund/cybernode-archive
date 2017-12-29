@@ -3,6 +3,7 @@ services:
 
   chaingear-api:
     image: cybernode/chaingear-api:latest
+    restart: unless-stopped
     ports:
       - 32600:8090
     environment:
