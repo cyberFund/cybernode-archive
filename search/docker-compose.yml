@@ -12,7 +12,7 @@ services:
       PARITY_ETH_URL: http://parity_eth:8545
       BITCOIND_URL: http://cyber:cyber@bitcoind:8332
       ABC_URL: http://bitcoin:password@abc:7332
-      PARITY_ETC_URL: http://parity_etc:18545
+      PARITY_ETC_URL: http://parity_etc:8545
       CS_LOG_LEVEL: INFO
 
   cs-search-api:
