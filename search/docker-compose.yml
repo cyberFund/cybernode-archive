@@ -3,7 +3,7 @@ services:
 
   cs-chain-pumps-eth-btc-bth-etc:
     container_name: pump-eth-btc-bth-etc
-    image: cybernode/cs-chain-pumps:latest
+    image: cybernode/cs-chain-pumps:dev
     restart: unless-stopped
     environment:
       CASSANDRA_HOSTS: elassandra
