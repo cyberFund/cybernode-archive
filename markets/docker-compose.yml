@@ -31,7 +31,7 @@ services:
       KAFKA_CONNECTION: kafka:9092
       CASSANDRA_HOSTS: elassandra2
       CASSANDRA_PORT: 9042
-      DEBUG: "false"
+      CM_LOG_LEVEL: INFO
 
   cm-connector-bitstamp:
     container_name: cm-connector-bitstamp
