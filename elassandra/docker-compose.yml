@@ -17,10 +17,9 @@ services:
       - "9300:9300"
     healthcheck:
       test: cqlsh --cqlversion=3.4.4 -e "SHOW HOST"
-      interval: 3s
+      interval: 5s
       timeout: 10s
       retries: 30
-      start_period: 5s
       
   elassandra2:
     container_name: elassandra2
